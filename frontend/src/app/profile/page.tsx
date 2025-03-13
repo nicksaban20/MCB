@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import FileUpload from '@/components/FileUpload'
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -124,6 +125,9 @@ export default function ProfilePage() {
               Back to Homepage
             </button>
           </Link>
+
+          <h1 className="text-black text-2xl font-bold mb-4">Upload File</h1>
+            <FileUpload />
         </div>
       </div>
     </div>
