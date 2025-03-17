@@ -53,13 +53,11 @@ const Auth = () => {
 
   return (
     <div className="flex bg-white min-h-screen">
-      {/* Left Side - Image with Text */}
       <div className="w-1/2 text-black p-8 flex items-center rounded-r-lg">
         <p className="text-lg font-semibold">
           TODO: put an image here
         </p>
       </div>
-      {/* Right Side - Sign Up Form */}
       <div className="w-1/2 flex flex-col justify-center p-8">
         <h2 className="text-2xl text-black font-bold mb-4">Create an Account</h2>
         <form onSubmit={handleSignUp} className="space-y-4 [&>*]:placeholder-gray-300">
@@ -77,7 +75,6 @@ const Auth = () => {
           <button type="submit" className="w-full p-3 bg-gray-900 text-white rounded text-lg" disabled={loading}>SIGN UP</button>
         </form>
         
-        {/* Google Sign In */}
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>

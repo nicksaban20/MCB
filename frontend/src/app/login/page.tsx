@@ -45,13 +45,12 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Left Side - Image with Text */}
+    
       <div className="w-1/2 bg-white text-black p-8 flex items-center justify-center rounded-r-lg">
         <p className="text-xl font-semibold max-w-md">
           TODO: put an image here
         </p>
       </div>
-      {/* Right Side - Login Form */}
       <div className="w-1/2 flex flex-col justify-center px-16 py-12">
         <h2 className="text-3xl text-black font-bold mb-6 text-center">Sign In</h2>
         <form onSubmit={handleSignIn} className="space-y-4">
