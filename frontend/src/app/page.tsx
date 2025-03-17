@@ -12,7 +12,7 @@ export default async function HomePage() {
         <h1 className="text-4xl font-bold text-center">Welcome to Berkeley Sequencing Lab</h1>
         
         <p className="text-center text-xl">
-          Your trusted partner for advanced sequencing solutions
+        Place any components you dont know where to put here <br></br>Label: name, component name
         </p>
         
         <div className="flex justify-center space-x-4">
@@ -24,8 +24,8 @@ export default async function HomePage() {
               </Link>
             </>
           ) : (
-            <Link href="/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-              Sign In
+            <Link href="/signin" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+              Continue to app
             </Link>
           )}
         </div>
