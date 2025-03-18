@@ -11,7 +11,7 @@ const Navbar = () => {
       <ul className="flex space-x-8 text-gray-700 font-medium">
         <li className="hover:text-black cursor-pointer"><Link href="/dashboard">HOME</Link></li>
         <li className="hover:text-black cursor-pointer">SERVICES</li>
-        <li className="hover:text-black cursor-pointer">ORDER FORMS</li>
+        <li className="hover:text-black cursor-pointer"><Link href="/form">ORDER FORMS</Link></li>
         <li className="hover:text-black cursor-pointer">PRICING</li>
         <li className="hover:text-black cursor-pointer">MORE</li>
         <li className="hover:text-black cursor-pointer">CONTACT</li>
