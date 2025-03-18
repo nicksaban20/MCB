@@ -8,14 +8,16 @@ const Navbar = () => {
       <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
       
       {/* Navigation Links */}
-      <ul className="flex space-x-8 text-gray-700 font-medium">
+      <ul className="flex space-x-8 items-center text-gray-700 font-medium">
         <li className="hover:text-black cursor-pointer"><Link href="/dashboard">HOME</Link></li>
         <li className="hover:text-black cursor-pointer">SERVICES</li>
         <li className="hover:text-black cursor-pointer"><Link href="/form">ORDER FORMS</Link></li>
         <li className="hover:text-black cursor-pointer">PRICING</li>
         <li className="hover:text-black cursor-pointer">MORE</li>
         <li className="hover:text-black cursor-pointer">CONTACT</li>
+        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-xs text-gray-60"><Link href="/profile">profile</Link></div>
       </ul>
+
     </nav>
   );
 };
