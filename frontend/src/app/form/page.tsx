@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Navbar from "../navbar/page";
+import ContactPage from "../contact-page/page";
 import { AiOutlineDownload, AiOutlineCloudUpload } from "react-icons/ai";
 
 /* ================================
@@ -50,8 +51,7 @@ export default function Form() {
   // Minimal placeholders for Steps 3 & 4:
   const StepThree = () => (
     <div>
-      <h2 className="text-xl font-medium">Step 3: Contact Info</h2>
-      <p className="text-gray-500">Contact details go here...</p>
+      <ContactPage />
     </div>
   );
 

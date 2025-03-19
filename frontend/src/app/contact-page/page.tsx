@@ -299,39 +299,7 @@ export default function ContactPage(): JSX.Element {
               </Stack>
             </Box>
 
-            {/* Buttons */}
-            <Flex gap={6} w="100%" mt={4} justify="flex-end">
-              <Button
-                variant="outline"
-                h="40px"
-                w="60px"
-                borderRadius="6px"
-                bg="white"
-                borderColor="#E2E8F0"
-                color="#727272"
-                fontSize="16px"
-                fontWeight="medium"
-                _hover={{ bg: '#F7FAFC', borderColor: '#CBD5E0' }}
-                _active={{ bg: '#EDF2F7' }}
-                transition="all 0.2s"
-              >
-                Back
-              </Button>
-              <Button
-                h="40px"
-                w="60px"
-                borderRadius="6px"
-                bg="#4A4A4A"
-                color="white"
-                fontSize="16px"
-                fontWeight="medium"
-                _hover={{ bg: '#3D3D3D' }}
-                _active={{ bg: '#2D2D2D' }}
-                transition="all 0.2s"
-              >
-                Next
-              </Button>
-            </Flex>
+            
           </VStack>
         </Box>
       </Container>
