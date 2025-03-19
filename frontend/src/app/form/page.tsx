@@ -256,8 +256,26 @@ function StepTwo({ formData, setFormData }: any) {
   const [manualSamplesNotes, setManualSamplesNotes] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Assumes that the file is formatted with the input table's column names: "Sample No.", "Name", "Notes"
     if (e.target.files && e.target.files[0]) {
-      setDnaDataFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setDnaDataFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = reader.result as string;
+        const rows = text.split('\n').map(row => row.trim()).filter(row => row.length > 0);
+        const headers = rows[0].split(',').map(header => header.trim()); // headers
+        const data = rows.slice(1).map((row) => { // loop through rows
+          const columns = row.split(',').map(value => value.trim());
+          return {
+            sampleNo: columns[0] || '',
+            name: columns[1] || '',
+            notes: columns[2] || '',
+          };
+        });
+        setSamples(data); // store parsed data in the table
+      };
+      reader.readAsText(file);
     }
   };
 
