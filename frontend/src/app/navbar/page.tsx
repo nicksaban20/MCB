@@ -1,8 +1,11 @@
+'use client'
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useUser } from '@/context/UserContext';
 
-const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
+const Navbar = () => {
+  const { user } = useUser();
   return (
     <nav className="bg-white py-4 px-6 flex justify-between items-center border-b">
       {/* Logo Placeholder */}
@@ -11,9 +14,13 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
       </div>
 
       <ul className="flex space-x-8 text-gray-700 font-medium items-center">
-        <li className="hover:text-black cursor-pointer"><Link href="/dashboard">HOME</Link></li>
+        <li className="hover:text-black cursor-pointer">
+          <Link href="/dashboard">HOME</Link>
+        </li>
         <li className="hover:text-black cursor-pointer">SERVICES</li>
-        <li className="hover:text-black cursor-pointer"><Link href="/form">ORDER FORMS</Link></li>
+        <li className="hover:text-black cursor-pointer">
+          <Link href="/form">ORDER FORMS</Link>
+        </li>
         <li className="hover:text-black cursor-pointer">PRICING</li>
         <li className="hover:text-black cursor-pointer">MORE</li>
         <li className="hover:text-black cursor-pointer">CONTACT</li>
@@ -21,10 +28,10 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
         {/* Profile Picture Link */}
         <Link href="/profile">
           <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden cursor-pointer">
-            {profilePicUrl ? (
-              <Image 
+            {user?.user_metadata?.avatar_url ? (
+              <Image
                 className="rounded-full"
-                src={profilePicUrl}
+                src={user.user_metadata.avatar_url}
                 width={48}
                 height={48}
                 alt="profile image"
