@@ -1,6 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
+import SequencingTxtLink from '@/components/SequencingTxtLink';
 
 export default async function HomePage() {
   const supabase = createServerComponentClient({ cookies })
@@ -14,6 +15,7 @@ export default async function HomePage() {
         <p className="text-center text-xl">
         Place any components you dont know where to put here <br></br>Label: name, component name
         </p>
+      <SequencingTxtLink />
         
         <div className="flex justify-center space-x-4">
           {session ? (
