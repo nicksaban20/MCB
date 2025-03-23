@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -26,7 +27,6 @@ export default function Form() {
 
   // We have 5 total steps
   const steps = ["Specify", "Sample Details", "Contact", "Payment", "Review"];
-
   // Go forward
   const handleNext = () => {
     // Example check for Step 1 if needed:
@@ -266,7 +266,7 @@ function StepTwo({ formData, setFormData }: any) {
         const rows = text.split('\n').map(row => row.trim()).filter(row => row.length > 0);
         const headers = rows[0].split(',').map(header => header.trim()); // headers
         const data = rows.slice(1).map((row) => { // loop through rows
-          const columns = row.split(',').map(value => value.trim());
+        const columns = row.split(',').map(value => value.trim());
           return {
             sampleNo: columns[0] || '',
             name: columns[1] || '',
@@ -357,7 +357,6 @@ function StepTwo({ formData, setFormData }: any) {
           <p className="mb-2 lg:mb-0 font-medium">
             Please select a Sample Type to create a new order:
           </p>
-          <div className="flex flex-wrap gap-4">
             {["Plasmid", "PCR Product", "Genomic DNA"].map((type) => (
               <label
                 key={type}

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import { UserContext, UserProvider } from '@/context/UserContext'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
+        <UserProvider initialSession={session}>
         {children}
+        </UserProvider>
       </body>
     </html>
   )
