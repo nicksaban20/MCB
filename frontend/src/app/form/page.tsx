@@ -204,7 +204,7 @@ export default function Form() {
             )}
 
             {/* Only show main nav buttons if < Step 5, because Step 5 has its own */}
-            {currentStep < 5 && (
+            {currentStep < 4 && (
               <div className="flex justify-end mt-4 space-x-2">
                 <button
                   type="button"
