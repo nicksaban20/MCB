@@ -26,7 +26,7 @@ export default async function HomePage() {
               </Link>
             </>
           ) : (
-            <Link href="/signin" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            <Link href="/hero" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
               Continue to app
             </Link>
           )}

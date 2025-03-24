@@ -78,7 +78,7 @@ const Login = () => {
         </button>
         
         <p className="mt-6 text-center text-gray-600">
-          Don't have an account? <Link href="/signup" className="text-gray-900 underline not-last:font-semibold">Sign Up</Link>
+          Don't have an account? <Link href="/signin" className="text-gray-900 underline not-last:font-semibold">Sign Up</Link>
         </p>
       </div>
     </div>
