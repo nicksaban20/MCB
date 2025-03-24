@@ -26,7 +26,7 @@ export default function Form() {
   });
 
   // We have 5 total steps
-  const steps = ["Specify", "Sample Details", "Contact", "Payment", "Review"];
+  const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"];
   // Go forward
   const handleNext = () => {
     // Example check for Step 1 if needed:
@@ -34,7 +34,7 @@ export default function Form() {
       alert("Please select a Sample Type first.");
       return;
     }
-    if (currentStep < 5) {
+    if (currentStep < 4) {
       setCurrentStep((prev) => prev + 1);
     }
   };
@@ -65,59 +65,122 @@ export default function Form() {
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen bg-gray-100 p-6 text-gray-600 gap-10">
-        {/* Left nav */}
-        <div className="w-1/3 p-6 rounded-lg">
-          <h2 className="text-2xl font-bold mb-1">
+      <div className="flex min-h-screen bg-[#dfe1e6] p-6 text-gray-600 gap-15">
+        {/* LEFT NAV CONTAINER */}
+        <div className="w-1/6 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 max-h-[65vh]">
+          {/* Title & Subtitle */}
+          <h2 className="text-2xl font-bold text-[#002676] mb-1.5">
             {steps[currentStep - 1].toUpperCase()}
           </h2>
-          <p className="mb-4 text-sm mb-8">
+          <p className="text-sm text-gray-500 mb-6">
             Lorem ipsum dolor sit amet consectetur.
           </p>
-          <div className="relative space-y-6">
-            {steps.map((step, index) => (
-              <div key={index} className="relative flex items-center">
-                <div className="flex flex-col w-full">
-                  <p className="text-xs">{`Step ${index + 1}`}</p>
-                  <p
-                    className={`text-md ${
-                      currentStep === index + 1
-                        ? "font-bold text-gray-700"
-                        : "font-bold text-gray-400"
-                    }`}
-                  >
-                    {step}
-                  </p>
-                </div>
-                <div className="relative flex items-center ml-4">
-                  <div
-                    className={`w-5 h-5 border-2 rounded-full flex items-center justify-center
-                    ${
-                      currentStep === index + 1
-                        ? "bg-gray-700 border-gray-700"
-                        : "border-gray-700"
-                    }`}
-                  >
-                    {currentStep === index + 1 && (
-                      <div className="w-2.5 h-2.5 rounded-full"></div>
-                    )}
+
+          {/* YELLOW INFO BOX */}
+          <div className="flex items-center gap-2 p-2 bg-[#FFF5DB] border-1 border-[#feb516] rounded-xl mb-8">
+            {/* Exclamation Icon */}
+            <div className="ml-2 mr-1 flex font-[var(--font-inter)] items-center justify-center w-11 h-5 rounded-full bg-[#FFF5DB] border-2 border-black text-black text-sm">
+              !
+            </div>
+
+            {/* Message Content */}
+            <p className=" mt-1 mb-1 text-xs font-[var(--font-inter)] text-[#1a1a1a]">
+              Please read through the{" "}
+              <a
+                href="/guidelines"
+                className="font-semibold text-xs text-[#1a1a1a]"
+                target="_blank"
+                rel="noreferrer"
+
+              >
+                sampling guidelines
+              </a>{" "}
+              before submitting order requests!
+            </p>
+          </div>
+
+
+          {/* STEP PROGRESS BUBBLES */}
+          <div className="space-y-6">
+            {steps.map((step, index) => {
+              const stepNumber = index + 1;
+              const isActive = currentStep === stepNumber;
+              const isCompleted = currentStep > stepNumber;
+
+              return (
+                <div key={index} className="relative flex items-center">
+                  {/* Step Label */}
+                  <div className="flex flex-col w-full">
+                    <p className="text-xs text-gray-400">{`Step ${stepNumber}`}</p>
+                    <p
+                      className={`text-md ${isActive
+                        ? "font-bold text-[#002676]"
+                        : isCompleted
+                          ? "font-bold text-gray-600"
+                          : "font-bold text-gray-400"
+                        }`}
+                    >
+                      {step}
+                    </p>
                   </div>
 
-                  {index > 0 && (
-                    <div className="absolute left-[50%] bottom-5 w-0.5 h-10 bg-gray-600"></div>
-                  )}
-                  {index < steps.length - 1 && (
-                    <div className="absolute left-[50%] top-5 w-0.5 h-10 bg-gray-600"></div>
-                  )}
+                  {/* Circle (Bubble) + Vertical Lines */}
+                  <div className="relative flex items-center ml-4">
+                    {/* Circle */}
+                    <div
+                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center
+                      ${isActive
+                          ? "border-yellow-500 bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]"
+                          : isCompleted ? "border-yellow-500 bg-yellow-500"
+                            : "border-gray-300 bg-white"
+                        }`}
+                    >
+                      {/* If active, show a checkmark SVG in white */}
+                      {isCompleted && (
+                        <svg
+                          className="w-3 h-3 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 12l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </div>
+
+                    {/* Vertical connector lines */}
+                    {/* Connector above (if not first step) */}
+                    {index > 0 && (
+                      <div
+                        className={`absolute left-[50%] bottom-6 w-0.5 h-6 ${index <= currentStep - 1 ? "bg-yellow-500" : "bg-gray-300"
+                          }`}
+                      ></div>
+                    )}
+
+                    {/* Connector below (if not last step) */}
+                    {index < steps.length - 1 && (
+                      <div
+                        className={`absolute left-[50%] top-6 w-0.5 h-6 ${index < currentStep - 1 ? "bg-yellow-500" : "bg-gray-300"
+                          }`}
+                      ></div>
+                    )}
+
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
+
         {/* Right form content */}
-        <div className="w-3/4 bg-white shadow-md rounded-lg py-10 px-15 ml-6">
-          <form className="space-y-4">
+        <div className="w-3/4 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 mr-15">
+          <form className="space-y-4 p-10">
             {/* STEP 1 */}
             {currentStep === 1 && (
               <StepOne formData={formData} setFormData={setFormData} />
@@ -131,11 +194,9 @@ export default function Form() {
             {/* STEP 3 */}
             {currentStep === 3 && <StepThree />}
 
-            {/* STEP 4 */}
-            {currentStep === 4 && <StepFour />}
 
-            {/* STEP 5: Review */}
-            {currentStep === 5 && (
+            {/* STEP 4: Review */}
+            {currentStep === 4 && (
               <ReviewOrder
                 formData={formData}
                 goBack={() => setCurrentStep(4)}
@@ -187,20 +248,42 @@ function StepOne({ formData, setFormData }: any) {
   ];
 
   return (
-    <div>
-      <h2 className="block font-bold mb-2">
-        Please select a Sample Type to create a new order:
-      </h2>
+    <div className="w-full">
+      <div className="flex items-center gap-2 mb-4">
+        <h2 className="text-lg font-bold text-[#3C445C]">
+          Please select a Sample Type to create a new order:
+        </h2>
+        <div className="relative group cursor-pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4 text-gray-400 group-hover:text-gray-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+            />
+          </svg>
+          <div className="absolute z-10 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 top-full left-1/2 -translate-x-1/2 mt-1 whitespace-nowrap">
+            TODO
+          </div>
+        </div>
+      </div>
+
+
       <div className="space-y-3">
         {sampleOptions.map((opt) => (
           <label
             key={opt}
-            className={`flex items-center px-3 py-2 border rounded-lg cursor-pointer transition
-             ${
-               formData.sampleTypeStep1 === opt
-                 ? "border-gray-600 bg-gray-100"
-                 : "border-gray-300"
-             }
+            className={`flex items-center px-3 py-3 border rounded-lg cursor-pointer transition
+             ${formData.sampleTypeStep1 === opt
+                ? "border-[#002676] bg-[#F0EFF4]"
+                : "border-gray-300"
+              }
              hover:border-gray-400`}
           >
             <input
@@ -218,11 +301,10 @@ function StepOne({ formData, setFormData }: any) {
             />
             <div
               className={`w-4 h-4 border-2 rounded-full flex items-center justify-center mr-3
-               ${
-                 formData.sampleTypeStep1 === opt
-                   ? "border-gray-600 bg-gray-600"
-                   : "border-gray-400"
-               }`}
+               ${formData.sampleTypeStep1 === opt
+                  ? "border-[#002676] bg-[#002676]"
+                  : "border-gray-400"
+                }`}
             />
             <span className="w-full text-gray-400 text-sm">{opt}</span>
           </label>
@@ -266,7 +348,7 @@ function StepTwo({ formData, setFormData }: any) {
         const rows = text.split('\n').map(row => row.trim()).filter(row => row.length > 0);
         const headers = rows[0].split(',').map(header => header.trim()); // headers
         const data = rows.slice(1).map((row) => { // loop through rows
-        const columns = row.split(',').map(value => value.trim());
+          const columns = row.split(',').map(value => value.trim());
           return {
             sampleNo: columns[0] || '',
             name: columns[1] || '',
@@ -357,22 +439,21 @@ function StepTwo({ formData, setFormData }: any) {
           <p className="mb-2 lg:mb-0 font-medium">
             Please select a Sample Type to create a new order:
           </p>
-            {["Plasmid", "PCR Product", "Genomic DNA"].map((type) => (
-              <label
-                key={type}
-                className="inline-flex items-center space-x-2 cursor-pointer border border-gray-300 px-3 py-2 rounded"
-              >
-                <input
-                  type="radio"
-                  name="sampleType"
-                  value={type}
-                  checked={sampleType === type}
-                  onChange={(e) => setSampleType(e.target.value)}
-                />
-                <span>{type}</span>
-              </label>
-            ))}
-          </div>
+          {["Plasmid", "PCR Product", "Genomic DNA"].map((type) => (
+            <label
+              key={type}
+              className="inline-flex items-center space-x-2 cursor-pointer border border-gray-300 px-3 py-2 rounded"
+            >
+              <input
+                type="radio"
+                name="sampleType"
+                value={type}
+                checked={sampleType === type}
+                onChange={(e) => setSampleType(e.target.value)}
+              />
+              <span>{type}</span>
+            </label>
+          ))}
         </div>
 
         {/* Sample Table */}
@@ -733,11 +814,10 @@ function ReviewOrder({ formData, goBack }: any) {
           <button
             disabled={!agreedToTerms || !agreedToGuidelines}
             onClick={handleSubmit}
-            className={`px-6 py-2 rounded-md text-white ${
-              agreedToTerms && agreedToGuidelines
-                ? "bg-gray-900 hover:bg-gray-800"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
+            className={`px-6 py-2 rounded-md text-white ${agreedToTerms && agreedToGuidelines
+              ? "bg-gray-900 hover:bg-gray-800"
+              : "bg-gray-400 cursor-not-allowed"
+              }`}
           >
             Submit Order
           </button>

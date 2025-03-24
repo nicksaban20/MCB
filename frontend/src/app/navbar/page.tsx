@@ -7,7 +7,15 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
     <nav className="bg-white py-4 px-6 flex justify-between items-center border-b">
       {/* Logo Placeholder */}
       <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-xs text-gray-600">
-        <Link href="/profile">logo</Link>
+        <Link href="/profile">
+          <Image
+            src="/assets/mcb_icon.png"
+            alt="MCB Logo"
+            width={48}
+            height={48}
+            className="object-cover"
+          />
+        </Link>
       </div>
 
       <ul className="flex space-x-8 text-gray-700 font-medium items-center">
@@ -22,7 +30,7 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
         <Link href="/profile">
           <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden cursor-pointer">
             {profilePicUrl ? (
-              <Image 
+              <Image
                 className="rounded-full"
                 src={profilePicUrl}
                 width={48}
