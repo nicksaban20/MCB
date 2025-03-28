@@ -27,11 +27,11 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
         <li className="hover:text-black cursor-pointer">CONTACT</li>
 
         {/* Profile Picture Link */}
-        <Link href="/login">
+        {/* <Link href="/login">
           <button className="px-5 py-2 border border-[#002676] text-[#002676] rounded-xl text-sm hover:bg-[#f0f3ff] transition">
             SIGN IN
           </button>
-        </Link>
+        </Link> */}
       </ul>
     </nav>
   );

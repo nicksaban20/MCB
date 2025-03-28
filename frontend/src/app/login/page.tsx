@@ -1,40 +1,30 @@
 "use client"
 import React, { useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { login } from "./actions";
+import { createClient } from "@/utils/supabase/client";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const supabase = createClient();
 
-  const handleSignIn = async (e: { preventDefault: () => void; }) => {
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      alert(error.message);
-    } else {
-      router.push("/home");
-      router.refresh();
-    }
+    const formData = new FormData(e.currentTarget);
+    await login(formData);
     setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/home`,
-        },
+        provider: "google"
       });
+      
       if (error) {
         console.error("Error signing in with Google:", error);
       }
@@ -45,7 +35,6 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-    
       <div className="w-1/2 bg-white text-black p-8 flex items-center justify-center rounded-r-lg">
         <p className="text-xl font-semibold max-w-md">
           TODO: put an image here
@@ -54,9 +43,27 @@ const Login = () => {
       <div className="w-1/2 flex flex-col justify-center px-16 py-12">
         <h2 className="text-3xl text-black font-bold mb-6 text-center">Sign In</h2>
         <form onSubmit={handleSignIn} className="space-y-4">
-          <input type="email" placeholder="Email" className="p-3 placeholder-gray-300 text-gray-300 border rounded w-full" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Password" className="p-3  placeholder-gray-300 text-gray-300 border rounded w-full" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <button type="submit" className="w-full p-3 bg-gray-900 text-white rounded text-lg" disabled={loading}>SIGN IN</button>
+          <input 
+            name="email"
+            type="email" 
+            placeholder="Email" 
+            className="p-3 placeholder-gray-300 text-gray-300 border rounded w-full" 
+            required 
+          />
+          <input 
+            name="password"
+            type="password" 
+            placeholder="Password" 
+            className="p-3 placeholder-gray-300 text-gray-300 border rounded w-full" 
+            required 
+          />
+          <button 
+            type="submit" 
+            className="w-full p-3 bg-gray-900 text-white rounded text-lg" 
+            disabled={loading}
+          >
+            SIGN IN
+          </button>
         </form>
         
         {/* Google Sign In */}

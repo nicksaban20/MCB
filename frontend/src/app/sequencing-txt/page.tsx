@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 
 interface SequencingData {
   container_name: string;
@@ -30,6 +30,7 @@ interface SampleData {
 // confirmation modal
 
 export const processSequencingTxtFile = async (fileContent: string) => {
+  const supabase = createClient();
   try {
     // validation: check if file content is empty
     if (!fileContent || fileContent.trim() === '') {

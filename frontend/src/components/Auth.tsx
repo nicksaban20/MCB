@@ -1,6 +1,6 @@
 "use client"
  import React, { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
@@ -15,7 +15,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+  const supabase = createClient();
   const handleSignUp = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -38,10 +38,7 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/home`,
-        },
+        provider: "google"
       });
       if (error) {
         console.error("Error signing in with Google:", error);
