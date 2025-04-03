@@ -6,8 +6,6 @@ import ContactPage from "../contact-page/page";
 import { AiOutlineDownload, AiOutlineCloudUpload } from "react-icons/ai";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-
 /* ================================
    MAIN PARENT COMPONENT: Form
 ================================ */
@@ -632,6 +630,8 @@ function StepTwo({ formData, setFormData }: any) {
    STEP 5: REVIEW ORDER
 ================================ */
 function ReviewOrder({ formData, goBack }: any) {
+  const supabase = createClient();
+
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToGuidelines, setAgreedToGuidelines] = useState(false);
