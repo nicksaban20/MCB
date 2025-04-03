@@ -18,20 +18,30 @@ export default function Hero() {
 
         <div className="bg-gray-100 min-h-screen">
             <Navbar profilePicUrl="/assets/mcb_icon.png" />
+
             {/* Hero Section */}
-            <section className="h-screen w-full px-10 py-20 flex flex-col lg:flex-row justify-between items-start lg:items-center">
-                <div className="max-w-xl">
-                    <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight text-black">
+            <section
+                className="relative h-screen w-full px-10 py-20 flex flex-col lg:flex-row justify-between items-start lg:items-center bg-cover bg-center"
+                style={{
+                    backgroundImage: 'url("/assets/hero.png")',
+                }}
+            >
+                {/* White fade at bottom */}
+                <div className="absolute bottom-0 left-0 w-full h-60 bg-gradient-to-t from-white via-white/80 to-transparent z-10" />
+
+                {/* Main content */}
+                <div className="relative z-20 p-6 rounded-lg max-w-xl">
+                    <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight text-white">
                         BERKELEY <br /> SEQUENCING LAB
                     </h1>
-                    <p className="text-gray-700 text-sm lg:text-base mb-6">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+                    <p className="text-white text-sm lg:text-base mb-6">
+                        Lorem ipsum dolor sit amet...
                     </p>
                     <div className="flex gap-4">
-                        <button className="bg-black text-white px-6 py-2 text-sm rounded hover:bg-gray-900 transition">
+                        <button className="bg-[#FDB517] text-blue-950 px-6 py-2 text-sm rounded hover:bg-[#DA9E12] transition">
                             START SEQUENCING
                         </button>
-                        <button className="border text-black bg-white border-black px-6 py-2 text-sm rounded hover:bg-gray-200 transition">
+                        <button className="border-2 border-white text-white px-6 py-2 text-sm rounded-md hover:bg-gray-400 transition">
                             CONTACT US
                         </button>
                     </div>
