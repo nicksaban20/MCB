@@ -1,17 +1,23 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Navbar from '../navbar/page';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
+import { redirect } from 'next/navigation';
 
 const BerkeleyLabWelcome = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchUser = async () => {
       const response = await supabase.auth.getUser();
       const user = response.data.user;
       console.log(user);
+
+      if (!user) {
+        redirect('/login')
+    }
 
       if (user) {
         setUser(user);

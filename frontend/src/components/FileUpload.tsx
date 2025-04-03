@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
 
 export default function FileUpload() {
     const [uploading, setUploading] = useState(false)
-
+    const supabase = createClient();
+    
     const uploadFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
         try {
             setUploading(true)

@@ -1,17 +1,30 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../navbar/page";
 import ContactPage from "../contact-page/page";
 import { AiOutlineDownload, AiOutlineCloudUpload } from "react-icons/ai";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 /* ================================
    MAIN PARENT COMPONENT: Form
 ================================ */
 export default function Form() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        router.push('/login');
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   // Global form data
   const [formData, setFormData] = useState({
@@ -74,7 +87,7 @@ export default function Form() {
 
   return (
     <>
-      <Navbar />
+      <Navbar profilePicUrl={""} />
       <div className="flex min-h-screen bg-[#dfe1e6] p-6 text-gray-600 gap-15">
         {/* LEFT NAV CONTAINER */}
         <div className="w-1/6 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 max-h-[65vh]">
