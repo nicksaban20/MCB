@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
   return (
-    <nav className="bg-[#233A77] py-2 px-6 flex justify-between items-center">
+    <nav className="bg-[#1e3c71] py-2 px-6 flex justify-between items-center">
       {/* Logo Placeholder */}
       <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center border-2 border-white p-0.2 justify-center text-xs text-gray-600">
         <Link href="/profile">

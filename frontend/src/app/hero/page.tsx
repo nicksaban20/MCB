@@ -4,14 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../navbar/page";
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
+
 import dynamic from "next/dynamic";
-const Carousel = dynamic(() => import("../../components/Swiper"), {
-    ssr: false,
-});
+import LocationsSection from "../drop-off/page";
+
+
 
 export default function Hero() {
     return (
@@ -38,7 +35,7 @@ export default function Hero() {
                         Lorem ipsum dolor sit amet...
                     </p>
                     <div className="flex gap-4">
-                        <button className="bg-[#FDB517] text-blue-950 px-6 py-2 text-sm rounded hover:bg-[#DA9E12] transition">
+                        <button className="bg-[#FDB517] text-blue-950 px-6 py-2 text-sm rounded hover:bg-[#FFC52A] transition">
                             START SEQUENCING
                         </button>
                         <button className="border-2 border-white text-white px-6 py-2 text-sm rounded-md hover:bg-gray-400 transition">
@@ -69,6 +66,8 @@ export default function Hero() {
                     </div>
                 </div>
             </section>
+
+            <LocationsSection />
 
             {/* Services Section */}
             <section className="px-10 py-20 bg-white">
