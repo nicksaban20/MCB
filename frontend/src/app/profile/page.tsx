@@ -16,39 +16,27 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const supabase = createClient();
-  
-  type User = {
-    email: string | undefined;
-    id: string;
-  };
+
 
   useEffect(() => {
     async function getProfile() {
-      const supabase = createClient();
       const { data: { session }, error } = await supabase.auth.getSession();
-      
-
-  useEffect(() => {
-    async function getProfile() {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
+  
       if (error || !session) {
         router.push('/login');
         return;
       }
-
+  
       setUser({
         email: session.user.email,
         id: session.user.id,
       });
       setLoading(false);
     }
-
+  
     getProfile();
   }, [router]);
+
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -143,4 +131,4 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-}
+  }
