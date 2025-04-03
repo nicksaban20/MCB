@@ -48,6 +48,26 @@ export default function Hero() {
                 </div>
             </section>
 
+            {/* Icons */}
+            <section className="flex justify-center bg-white items-center w-full">
+                <div className="w-full max-w-6xl bg-white rounded-lg p-8 mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-16 text-center w-full">
+                        {[
+                            { icon: "/assets/chem.png", title: "Title 1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
+                            { icon: "/assets/search.png", title: "Title 2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
+                            { icon: "/assets/discuss.png", title: "Title 3", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
+                            { icon: "/assets/school.png", title: "Title 4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" }
+                        ].map((item, index) => (
+                            <div key={index} className="space-y-2">
+                                <img src={item.icon} alt={item.title} className="w-16 h-16 mx-auto" />
+                                <h3 className="font-bold mt-4 text-black text-lg">{item.title}</h3>
+                                <p className="text-gray-600 text-sm">{item.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Services Section */}
             <section className="px-10 py-20 bg-white">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
