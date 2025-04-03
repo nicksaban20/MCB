@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../navbar/page";
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-
+import Link from "next/link";
 const Dashboard = async () => {
     const supabase = await createClient()
     const { data: { user }, error: userError } = await supabase.auth.getUser()
@@ -22,6 +22,8 @@ const Dashboard = async () => {
     const firstName = user.user_metadata?.firstName || user.user_metadata?.name?.split(' ')[0] || '';
     const lastName = user.user_metadata?.lastName || user.user_metadata?.name?.split(' ').slice(1).join(' ') || '';
     const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "https://via.placeholder.com/50";
+
+
 
     return (
         <div className="bg-white">

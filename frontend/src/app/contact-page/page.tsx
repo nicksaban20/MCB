@@ -18,10 +18,17 @@ import {
 } from "@chakra-ui/react";
 import { FiUpload } from "react-icons/fi";
 
-export default function ContactPage(): JSX.Element {
+export default function ContactPage({
+  formData,
+  setFormData
+}: {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+}): JSX.Element {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const toast = useToast();
+  
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -70,14 +77,18 @@ export default function ContactPage(): JSX.Element {
           <VStack spacing={10} align="stretch">
             {/* Contact Information */}
             <Box>
-              <Heading color="#727272" mb={6} fontSize="21px" fontWeight="bold">
+              <Heading color="gray-800" mb={6} fontSize="21px" fontWeight="bold">
                 Contact Information
               </Heading>
               <Stack spacing={6}>
                 <Flex gap={6}>
                   <FormControl flex={1}>
-                    <Input 
-                      placeholder="First Name" 
+                    <Input
+                      placeholder="First Name"
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData((prev: any) => ({ ...prev, firstName: e.target.value }))
+                      }
                       bg="transparent"
                       border="1px solid #E2E8F0"
                       borderRadius="8px"
@@ -90,8 +101,12 @@ export default function ContactPage(): JSX.Element {
                     />
                   </FormControl>
                   <FormControl flex={1}>
-                    <Input 
-                      placeholder="Last Name" 
+                    <Input
+                      placeholder="Last Name"
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData((prev: any) => ({ ...prev, lastName: e.target.value }))
+                      }
                       bg="transparent"
                       border="1px solid #E2E8F0"
                       borderRadius="8px"
@@ -105,8 +120,12 @@ export default function ContactPage(): JSX.Element {
                   </FormControl>
                 </Flex>
                 <FormControl>
-                  <Input 
-                    placeholder="Email Address" 
+                  <Input
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({ ...prev, email: e.target.value }))
+                    }
                     bg="transparent"
                     border="1px solid #E2E8F0"
                     borderRadius="8px"
@@ -119,8 +138,12 @@ export default function ContactPage(): JSX.Element {
                   />
                 </FormControl>
                 <FormControl>
-                  <Input 
-                    placeholder="Phone Number" 
+                  <Input
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={(e) =>
+                        setFormData((prev: any) => ({ ...prev, phone: e.target.value }))
+                    }
                     bg="transparent"
                     border="1px solid #E2E8F0"
                     borderRadius="8px"
@@ -137,13 +160,17 @@ export default function ContactPage(): JSX.Element {
 
             {/* Mailing Address */}
             <Box>
-              <Heading color="#727272" mb={6} fontSize="21px" fontWeight="bold">
+              <Heading color="#gray-800" mb={6} fontSize="21px" fontWeight="bold">
                 Mailing Address
               </Heading>
               <Stack spacing={6}>
                 <FormControl>
-                  <Input 
-                    placeholder="Street Address" 
+                  <Input
+                    placeholder="Street Address"
+                    value={formData.streetAddress}
+                    onChange={(e) =>
+                        setFormData((prev: any) => ({ ...prev, streetAddress: e.target.value }))
+                    }
                     bg="transparent"
                     border="1px solid #E2E8F0"
                     borderRadius="8px"
@@ -157,8 +184,12 @@ export default function ContactPage(): JSX.Element {
                 </FormControl>
                 <Flex gap={6}>
                   <FormControl flex={1}>
-                    <Input 
-                      placeholder="City" 
+                    <Input
+                      placeholder="City"
+                      value={formData.city}
+                      onChange={(e) =>
+                          setFormData((prev: any) => ({ ...prev, city: e.target.value }))
+                      }
                       bg="transparent"
                       border="1px solid #E2E8F0"
                       borderRadius="8px"
@@ -171,8 +202,12 @@ export default function ContactPage(): JSX.Element {
                     />
                   </FormControl>
                   <FormControl flex={1}>
-                    <Input 
-                      placeholder="State" 
+                    <Input
+                      placeholder="State"
+                      value={formData.state}
+                      onChange={(e) =>
+                          setFormData((prev: any) => ({ ...prev, state: e.target.value }))
+                      }
                       bg="transparent"
                       border="1px solid #E2E8F0"
                       borderRadius="8px"
@@ -185,8 +220,12 @@ export default function ContactPage(): JSX.Element {
                     />
                   </FormControl>
                   <FormControl flex={1}>
-                    <Input 
-                      placeholder="Zip Code" 
+                    <Input
+                      placeholder="Zip Code"
+                      value={formData.zipCode}
+                      onChange={(e) =>
+                          setFormData((prev: any) => ({ ...prev, zipCode: e.target.value }))
+                      }
                       bg="transparent"
                       border="1px solid #E2E8F0"
                       borderRadius="8px"
@@ -204,13 +243,17 @@ export default function ContactPage(): JSX.Element {
 
             {/* Additional Information */}
             <Box>
-              <Heading color="#727272" mb={6} fontSize="21px" fontWeight="bold">
+              <Heading color="#gray-800" mb={6} fontSize="21px" fontWeight="bold">
                 Additional Information
               </Heading>
               <Stack spacing={6}>
                 <FormControl>
-                  <Input 
-                    placeholder="UC Department or Off-Campus Organization" 
+                  <Input
+                    placeholder="UC Department or Off-Campus Organization"
+                    value={formData.department}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({ ...prev, department: e.target.value }))
+                    }
                     bg="transparent"
                     border="1px solid #E2E8F0"
                     borderRadius="8px"
@@ -223,8 +266,12 @@ export default function ContactPage(): JSX.Element {
                   />
                 </FormControl>
                 <FormControl>
-                  <Input 
-                    placeholder="Principal Investigator" 
+                  <Input
+                    placeholder="Principal Investigator"
+                    value={formData.pi}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({ ...prev, pi: e.target.value }))
+                    }
                     bg="transparent"
                     border="1px solid #E2E8F0"
                     borderRadius="8px"
@@ -237,8 +284,12 @@ export default function ContactPage(): JSX.Element {
                   />
                 </FormControl>
                 <FormControl>
-                  <Input 
-                    placeholder="Chartstring" 
+                  <Input
+                    placeholder="Chartstring"
+                    value={formData.chartstring}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({ ...prev, chartstring: e.target.value }))
+                    }
                     bg="transparent"
                     border="1px solid #E2E8F0"
                     borderRadius="8px"
@@ -253,16 +304,16 @@ export default function ContactPage(): JSX.Element {
 
                 <Flex align="center" gap={3}>
                   <Divider flex={1} borderColor="#E2E8F0" />
-                  <Text color="#4B4B4B">OR</Text>
+                  <Text margin={10} color="#4B4B4B">OR</Text>
                   <Divider flex={1} borderColor="#E2E8F0" />
                 </Flex>
 
                 <Flex justify="space-between" align="start">
                   <Box w="324px">
-                    <Heading color="#727272" fontSize="21px" fontWeight="bold" mb={1}>
+                    <Heading color="#gray-800" fontSize="21px" fontWeight="bold" mb={1}>
                       Attach a PO
                     </Heading>
-                    <Text color="#727272" fontSize="17px" fontStyle="italic">
+                    <Text color="#gray-800" fontSize="17px" fontStyle="italic">
                       Upload your purchase order file
                     </Text>
                   </Box>
@@ -283,6 +334,7 @@ export default function ContactPage(): JSX.Element {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
+
                   >
                     <input
                       type="file"
@@ -299,7 +351,7 @@ export default function ContactPage(): JSX.Element {
               </Stack>
             </Box>
 
-            
+
           </VStack>
         </Box>
       </Container>
