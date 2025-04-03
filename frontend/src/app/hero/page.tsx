@@ -49,14 +49,6 @@ export default function Hero() {
             </section>
 
 
-            {/*<Carousel /> */}
-            <section className="px-10 py-20 bg-white">
-                <div>
-                    <h2>
-                        <p className="text-black"> More Sections....</p>
-                    </h2>
-                </div>
-            </section>
 
             {/* Icons */}
             <section className="flex justify-center bg-white items-center w-full">
