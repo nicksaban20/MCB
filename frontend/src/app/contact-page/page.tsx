@@ -28,7 +28,7 @@ export default function ContactPage({
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const toast = useToast();
-  
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -80,6 +80,41 @@ export default function ContactPage({
               <Heading color="gray-800" mb={6} fontSize="21px" fontWeight="bold">
                 Contact Information
               </Heading>
+              <Button
+                alignSelf="flex-right"
+                bg="#3182CE"
+                color="white"
+                borderRadius="8px"
+                px={6}
+                py={2}
+                fontWeight="semibold"
+                fontSize="sm"
+                _hover={{ bg: "#2B6CB0" }}
+                onClick={() => {
+                  setFormData({
+                    firstName: "Jane",
+                    lastName: "Doe",
+                    email: "jane.doe@example.com",
+                    phone: "123-456-7890",
+                    streetAddress: "123 Campus Drive",
+                    city: "Berkeley",
+                    state: "CA",
+                    zipCode: "94720",
+                    department: "Molecular Cell Biology",
+                    pi: "Dr. Smith",
+                    chartstring: "1234-5678-9012",
+                  });
+                  toast({
+                    title: "Form autofilled",
+                    description: "Your information was filled from the last order.",
+                    status: "info",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                }}
+              >
+                Auto fill from last order (mock)
+              </Button>
               <Stack spacing={6}>
                 <Flex gap={6}>
                   <FormControl flex={1}>
@@ -142,7 +177,7 @@ export default function ContactPage({
                     placeholder="Phone Number"
                     value={formData.phone}
                     onChange={(e) =>
-                        setFormData((prev: any) => ({ ...prev, phone: e.target.value }))
+                      setFormData((prev: any) => ({ ...prev, phone: e.target.value }))
                     }
                     bg="transparent"
                     border="1px solid #E2E8F0"
@@ -169,7 +204,7 @@ export default function ContactPage({
                     placeholder="Street Address"
                     value={formData.streetAddress}
                     onChange={(e) =>
-                        setFormData((prev: any) => ({ ...prev, streetAddress: e.target.value }))
+                      setFormData((prev: any) => ({ ...prev, streetAddress: e.target.value }))
                     }
                     bg="transparent"
                     border="1px solid #E2E8F0"
@@ -188,7 +223,7 @@ export default function ContactPage({
                       placeholder="City"
                       value={formData.city}
                       onChange={(e) =>
-                          setFormData((prev: any) => ({ ...prev, city: e.target.value }))
+                        setFormData((prev: any) => ({ ...prev, city: e.target.value }))
                       }
                       bg="transparent"
                       border="1px solid #E2E8F0"
@@ -206,7 +241,7 @@ export default function ContactPage({
                       placeholder="State"
                       value={formData.state}
                       onChange={(e) =>
-                          setFormData((prev: any) => ({ ...prev, state: e.target.value }))
+                        setFormData((prev: any) => ({ ...prev, state: e.target.value }))
                       }
                       bg="transparent"
                       border="1px solid #E2E8F0"
@@ -224,7 +259,7 @@ export default function ContactPage({
                       placeholder="Zip Code"
                       value={formData.zipCode}
                       onChange={(e) =>
-                          setFormData((prev: any) => ({ ...prev, zipCode: e.target.value }))
+                        setFormData((prev: any) => ({ ...prev, zipCode: e.target.value }))
                       }
                       bg="transparent"
                       border="1px solid #E2E8F0"
