@@ -5,6 +5,7 @@ import { useState } from "react";
 import Navbar from "../navbar/page";
 import ContactPage from "../contact-page/page";
 import { AiOutlineDownload, AiOutlineCloudUpload } from "react-icons/ai";
+import { supabase } from '@/lib/supabase';
 
 /* ================================
    MAIN PARENT COMPONENT: Form
@@ -14,19 +15,30 @@ export default function Form() {
 
   // Global form data
   const [formData, setFormData] = useState({
-    // Step 1
+    // Step 1 & 2
     sampleTypeStep1: "",
-    // Step 2
     samples: [],
     dnaType: "",
     dnaQuantity: "",
     primerDetails: "",
     plateName: "",
-    // etc. add more as needed
+    
+    // Step 3 - Contact
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    department: "",
+    pi: "",
+    chartstring: "",
   });
 
   // We have 5 total steps
-  const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"];
+  const steps = ["Specify Order", "Sample Details", "Contact", "Submit"];
   // Go forward
   const handleNext = () => {
     // Example check for Step 1 if needed:
@@ -50,9 +62,7 @@ export default function Form() {
 
   // Minimal placeholders for Steps 3 & 4:
   const StepThree = () => (
-    <div>
-      <ContactPage />
-    </div>
+    <ContactPage formData={formData} setFormData={setFormData} />
   );
 
   const StepFour = () => (
@@ -216,7 +226,7 @@ export default function Form() {
                 </button>
                 <button
                   type="button"
-                  className="w-18 py-1 text-white rounded text-sm bg-gray-600 hover:bg-gray-700"
+                  className="w-18 py-1 text-white rounded text-sm bg-[#1b3c84] hover:bg-[#002676]"
                   onClick={handleNext}
                 >
                   Next
@@ -459,11 +469,11 @@ function StepTwo({ formData, setFormData }: any) {
         {/* Sample Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border border-gray-200 mb-4">
-            <thead className="bg-gray-100">
+            <thead className="bg-[#002676] text-white">
               <tr>
-                <th className="px-4 py-2 border-r border-gray-200 w-1/6">Sample No.</th>
-                <th className="px-4 py-2 border-r border-gray-200 w-1/3">Name</th>
-                <th className="px-4 py-2 w-1/2">Notes</th>
+                <th className="px-4 py-2 border-r text-white  w-1/6 rounded-tl-lg">No.</th>
+                <th className="px-4 py-2 border-r  w-1/3">Name</th>
+                <th className="px-4 py-2 w-1/2 rounded-tr-lg">Notes</th>
               </tr>
             </thead>
             <tbody>
@@ -503,7 +513,7 @@ function StepTwo({ formData, setFormData }: any) {
         </div>
         <button
           onClick={addSampleRow}
-          className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-md"
+          className="block w-full font-bold text-center bg-[#002676] text-white py-2 rounded-md"
         >
           Add a sample
         </button>
@@ -613,10 +623,63 @@ function ReviewOrder({ formData, goBack }: any) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToGuidelines, setAgreedToGuidelines] = useState(false);
 
-  const handleSubmit = () => {
-    alert("Order Submitted!");
-    setOrderSubmitted(true);
+  const handleSubmit = async () => {
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+      const userId = user?.id ?? 1; // fallback to 1 if user.id is null or undefined
+  
+      const address = `${formData.streetAddress}, ${formData.city}, ${formData.state} ${formData.zipCode}`;
+      console.log("Submitting user_profile:", {
+        user_id: userId,
+        name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        email: formData.email,
+        address,
+        chartstring: formData.chartstring,
+        pi: formData.pi,
+        department: formData.department,
+      });
+      const { error } = await supabase.from('user_profiles').upsert([
+        {
+          id: userId,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: `${formData.streetAddress}, ${formData.city}, ${formData.state} ${formData.zipCode}`,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zipCode,
+          department: formData.department,
+          pi: formData.pi,
+          chartstring: formData.chartstring,
+        }
+      ]);
+      
+      if (error) {
+        console.error("Supabase insert error:", error);
+        alert("There was an error saving your contact information.");
+        console.log("Submitting user_profile:", {
+          user_id: userId,
+          name: `${formData.firstName} ${formData.lastName}`,
+          phone: formData.phone,
+          email: formData.email,
+          address,
+          chartstring: formData.chartstring,
+          pi: formData.pi,
+          department: formData.department,
+        });
+      } else {
+        setOrderSubmitted(true);
+        alert("Order Submitted!");
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("Unexpected error occurred.");
+    }
   };
+  
 
   if (orderSubmitted) {
     return (

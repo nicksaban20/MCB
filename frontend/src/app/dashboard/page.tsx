@@ -1,5 +1,7 @@
 import React from "react";
 import Navbar from "../navbar/page";
+import Link from "next/link";
+
 
 const Dashboard = () => {
     return (
@@ -13,7 +15,13 @@ const Dashboard = () => {
 
                 <div className="bg-gray-100 p-6 rounded-lg flex justify-between items-center mb-6 border border-gray-300">
                     <div className="flex items-center">
-                        <img src="https://via.placeholder.com/50" alt="Profile" className="rounded-full mr-4 " />
+                        <Link href="/profile">
+                            <img
+                                src="https://via.placeholder.com/50"
+                                alt="Profile"
+                                className="rounded-full mr-4 cursor-pointer"
+                            />
+                        </Link>
                         <div>
                             <h2 className="text-lg text-gray-500 font-semibold">Buzzy Kim</h2>
                             <p className="text-gray-500">buzzykim1234@gmail.com | (123) 456 7890</p>
