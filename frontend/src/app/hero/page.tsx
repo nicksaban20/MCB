@@ -45,8 +45,6 @@ export default function Hero() {
                 </div>
             </section>
 
-
-
             {/* Icons */}
             <section className="flex justify-center bg-white items-center w-full">
                 <div className="w-full max-w-6xl bg-white rounded-lg p-8 mx-auto">
@@ -62,6 +60,36 @@ export default function Hero() {
                                 <h3 className="font-bold mt-4 text-black text-lg">{item.title}</h3>
                                 <p className="text-gray-600 text-sm">{item.description}</p>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+            
+            {/* Learn More Section */}
+            <section className="bg-white px-10 py-20">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-2xl font-semibold mb-8">Learn More</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {[
+                        [
+                            "CELL LINE / STEM CELL ANALYSIS",
+                            "Send us an aliquot of ~2 million cells, and we do the rest. Lyse, amplify, analyze, qualify, and send you the results!",
+                        ],
+                        [
+                            "WE DO NANOPORE SEQUENCING",
+                            "You provide a colony pick, plasmid, amplicon, etc… and we do the rest!",
+                        ],
+                        ].map(([title, description], index) => (
+                        <div
+                            key={index}
+                            className="rounded-xl overflow-hidden border border-gray-400"
+                        >
+                            <div className="h-24 bg-[#E6E8EC] w-full" />
+                            <div className="p-6 border-t border-gray-300">
+                            <h3 className="font-semibold text-sm mb-1">{title}</h3>
+                            <p className="text-sm text-gray-700">{description}</p>
+                            </div>
+                        </div>
                         ))}
                     </div>
                 </div>
