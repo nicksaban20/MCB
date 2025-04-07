@@ -68,8 +68,8 @@ export default function Hero() {
             {/* Learn More Section */}
             <section className="bg-white px-10 py-20">
                 <div className="max-w-7xl mx-auto">
-                    <h2 className="text-2xl font-semibold mb-8">Learn More</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <h2 className="text-2xl text-black font-semibold mb-8">Learn More</h2>
+                    <div className="grid  text-black grid-cols-1 md:grid-cols-2 gap-8">
                         {[
                         [
                             "CELL LINE / STEM CELL ANALYSIS",
