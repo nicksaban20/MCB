@@ -8,6 +8,8 @@ import React from "react";
 import dynamic from "next/dynamic";
 import LocationsSection from "../drop-off/page";
 
+import OrderCarousel from '@/components/OrderCarousel';
+
 
 
 export default function Hero() {
@@ -45,6 +47,8 @@ export default function Hero() {
                 </div>
             </section>
 
+            <OrderCarousel />
+
             {/* Icons */}
             <section className="flex justify-center bg-white items-center w-full">
                 <div className="w-full max-w-6xl bg-white rounded-lg p-8 mx-auto">
@@ -65,6 +69,7 @@ export default function Hero() {
                 </div>
             </section>
             
+
             {/* Learn More Section */}
             <section className="bg-white px-10 py-20">
                 <div className="max-w-7xl mx-auto">
