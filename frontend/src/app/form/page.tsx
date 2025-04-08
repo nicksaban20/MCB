@@ -87,42 +87,34 @@ export default function Form() {
     <>
       <Navbar profilePicUrl={""} />
       <div className="flex min-h-screen bg-[#dfe1e6] p-6 text-gray-600 gap-15">
-        {/* LEFT NAV CONTAINER */}
-        <div className="w-1/6 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 max-h-[65vh]">
+        {/* LEFT NAV CONTAINER - Updated to match Figma design */}
+        <div className="w-[300px] mt-10 bg-white rounded-xl shadow-lg px-8 py-8 ml-10 flex flex-col h-full">
           {/* Title & Subtitle */}
-          <h2 className="text-2xl font-bold text-[#002676] mb-1.5">
-            {steps[currentStep - 1].toUpperCase()}
-          </h2>
-          <p className="text-sm text-gray-500 mb-6">
-            Lorem ipsum dolor sit amet consectetur.
-          </p>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-[#0A215C]">
+              {currentStep === 1 ? "SPECIFY ORDER" : 
+              currentStep === 2 ? "SAMPLE DETAILS" : 
+              currentStep === 3 ? "CONTACT" : "SUBMIT"}
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Lorem ipsum dolor sit amet consectetur.
+            </p>
+          </div>
 
-          {/* YELLOW INFO BOX */}
-          <div className="flex items-center gap-2 p-2 bg-[#FFF5DB] border-1 border-[#feb516] rounded-xl mb-8">
+        {/* YELLOW INFO BOX */}
+        <div className="flex items-start gap-3 bg-[#FFF5DB] border border-[#FDC844] rounded-lg mb-8 p-4">
             {/* Exclamation Icon */}
             <div className="ml-2 mr-1 flex font-[var(--font-inter)] items-center justify-center w-11 h-5 rounded-full bg-[#FFF5DB] border-2 border-black text-black text-sm">
               !
             </div>
 
-            {/* Message Content */}
-            <p className=" mt-1 mb-1 text-xs font-[var(--font-inter)] text-[#1a1a1a]">
-              Please read through the{" "}
-              <a
-                href="/guidelines"
-                className="font-semibold text-xs text-[#1a1a1a]"
-                target="_blank"
-                rel="noreferrer"
+          {/* Text Content */}
+          <span className="text-[10px] leading-tight text-[#1a1a1a]">
+            Please read through the <strong className="font-semibold">sampling guidelines</strong> before submitting order requests!
+          </span>
+        </div>
 
-              >
-                sampling guidelines
-              </a>{" "}
-              before submitting order requests!
-            </p>
-          </div>
-
-
-          {/* STEP PROGRESS BUBBLES */}
-          <div className="space-y-6">
+        <div className="space-y-6">
             {steps.map((step, index) => {
               const stepNumber = index + 1;
               const isActive = currentStep === stepNumber;
@@ -150,7 +142,7 @@ export default function Form() {
                     {/* Circle */}
                     <div
                       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center
-                      ${isActive
+                        ${isActive
                           ? "border-yellow-500 bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]"
                           : isCompleted ? "border-yellow-500 bg-yellow-500"
                             : "border-gray-300 bg-white"
@@ -190,14 +182,12 @@ export default function Form() {
                           }`}
                       ></div>
                     )}
-
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
-
 
         {/* Right form content */}
         <div className="w-3/4 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 mr-15">
@@ -327,7 +317,15 @@ function StepOne({ formData, setFormData }: any) {
                   : "border-gray-400"
                 }`}
             />
-            <span className="w-full text-gray-400 text-sm">{opt}</span>
+            <span 
+              className={`w-full text-sm ${
+                formData.sampleTypeStep1 === opt
+                  ? "text-black font-semibold"
+                  : "text-gray-400"
+              }`}
+            >
+              {opt}
+            </span>
           </label>
         ))}
       </div>
