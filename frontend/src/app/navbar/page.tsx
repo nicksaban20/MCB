@@ -24,7 +24,7 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
         <li className="hover:font-bold cursor-pointer"><Link href="/form">ORDER FORMS</Link></li>
         <li className="hover:font-bold cursor-pointer">PRICING</li>
         <li className="hover:font-bold cursor-pointer">MORE</li>
-        <li className="hover:font-bold cursor-pointer">CONTACT</li>
+        <li className="hover:font-bold cursor-pointer"><Link href="/contact">CONTACT</Link></li>
          {/* Profile Picture Link */}
          <Link href="/login">
           <button className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition">
