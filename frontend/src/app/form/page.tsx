@@ -561,6 +561,7 @@ function StepTwo({ formData, setFormData }: any) {
           <input
             type="text"
             placeholder="(ng/µL)"
+            name="dnaQuantity"
             value={dnaQuantity}
             onChange={(e) => setDnaQuantity(e.target.value)}
             className="w-32 p-2 border border-gray-300 rounded"
@@ -576,6 +577,7 @@ function StepTwo({ formData, setFormData }: any) {
         <textarea
           placeholder="Type..."
           value={primerDetails}
+          name="primerDetails"
           onChange={(e) => setPrimerDetails(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mb-6"
         />
@@ -586,6 +588,7 @@ function StepTwo({ formData, setFormData }: any) {
         <input
           type="text"
           placeholder="Type..."
+          name="plateNameFull"
           value={plateNameFull}
           onChange={(e) => setPlateNameFull(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mb-4"
@@ -618,6 +621,7 @@ function StepTwo({ formData, setFormData }: any) {
           type="text"
           placeholder="Type..."
           value={plateNameLarge}
+          
           onChange={(e) => setPlateNameLarge(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded"
         />
