@@ -6,6 +6,7 @@ import ContactPage from "../contact-page/page";
 import { AiOutlineDownload, AiOutlineCloudUpload } from "react-icons/ai";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
+
 /* ================================
    MAIN PARENT COMPONENT: Form
 ================================ */
@@ -14,13 +15,23 @@ export default function Form() {
   const [currentStep, setCurrentStep] = useState(1);
   const supabase = createClient();
 
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data, error } = await supabase.auth.getUser();
+  
       if (error || !data?.user) {
         router.push('/login');
+      } else {
+        setUser(data.user);
       }
+  
+      setLoading(false);
     };
+  
     checkAuth();
   }, [router]);
 
@@ -85,7 +96,8 @@ export default function Form() {
 
   return (
     <>
-      <Navbar profilePicUrl={""} />
+    
+      <Navbar profilePicUrl={""} user={user} />
       <div className="flex min-h-screen bg-[#dfe1e6] p-6 text-gray-600 gap-15">
         {/* LEFT NAV CONTAINER */}
         <div className="w-1/6 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 max-h-[65vh]">
@@ -411,6 +423,8 @@ function StepTwo({ formData, setFormData }: any) {
       // etc.
     }));
   };
+
+  if (loading) return null;
 
   return (
     <div className="max-w-5xl mx-auto p-8" onBlur={syncToFormData}>
