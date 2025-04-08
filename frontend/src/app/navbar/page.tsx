@@ -1,12 +1,24 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 
-const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
+const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) => {
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login'); // optional: redirect to login
+  };
+
   return (
     <nav className="bg-[#1e3c71] py-2 px-6 flex justify-between items-center">
       {/* Logo Placeholder */}
-      <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center border-2 border-white p-0.2 justify-center text-xs text-gray-600">
+      <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center border-2 border-white p-0.5 justify-center text-xs text-gray-600">
         <Link href="/profile">
           <Image
             src="/assets/mcb_icon.png"
@@ -25,18 +37,22 @@ const Navbar = ({ profilePicUrl }: { profilePicUrl: string }) => {
         <li className="hover:font-bold cursor-pointer">PRICING</li>
         <li className="hover:font-bold cursor-pointer">MORE</li>
         <li className="hover:font-bold cursor-pointer"><Link href="/contact">CONTACT</Link></li>
-         {/* Profile Picture Link */}
-         <Link href="/login">
-          <button className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition">
-            SIGN IN
+
+        {/* Show Sign Out or Sign In depending on user */}
+        {user ? (
+          <button
+            onClick={handleLogout}
+            className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition"
+          >
+            SIGN OUT
           </button>
-        </Link>
-        {/* Profile Picture Link */}
-        {/* <Link href="/login">
-          <button className="px-5 py-2 border border-[#002676] text-[#002676] rounded-xl text-sm hover:bg-[#f0f3ff] transition">
-            SIGN IN
-          </button>
-        </Link> */}
+        ) : (
+          <Link href="/login">
+            <button className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition">
+              SIGN IN
+            </button>
+          </Link>
+        )}
       </ul>
     </nav>
   );
