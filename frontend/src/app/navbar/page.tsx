@@ -36,7 +36,7 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
         <li className="hover:font-bold cursor-pointer"><Link href="/form">ORDER FORMS</Link></li>
         <li className="hover:font-bold cursor-pointer">PRICING</li>
         <li className="hover:font-bold cursor-pointer">MORE</li>
-        <li className="hover:font-bold cursor-pointer"><Link href="/contact">CONTACT</Link></li>
+        <li className="hover:font-bold cursor-pointer"><Link href="/contact">FEEDBACK</Link></li>
 
         {/* Show Sign Out or Sign In depending on user */}
         {user ? (

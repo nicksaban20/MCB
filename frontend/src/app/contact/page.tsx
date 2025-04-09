@@ -46,7 +46,7 @@ const ContactPage = () => {
         <div className="w-1/2 bg-white p-10 flex flex-col justify-center">
           {!submitted ? (
             <>
-              <h2 className="text-2xl font-bold text-[#002676] mb-6">Contact Us</h2>
+              <h2 className="text-2xl font-bold text-[#002676] mb-6">Feedback</h2>
               <form onSubmit={handleSubmit} className="space-y-6 text-gray-600">
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold mb-1 text-gray-700">
@@ -89,10 +89,10 @@ const ContactPage = () => {
                     value={formData.issueType}
                     onChange={handleChange}
                   >
-                    <option value="option 1">option 1</option>
-                    <option value="option 2">option 2</option>
-                    <option value="option 3">option 3</option>
-                    <option value="option 4">option 4</option>
+                    <option value="option 1">Missing Samples</option>
+                    <option value="option 2">Not Satisfied with Purchase</option>
+                    <option value="option 3">Incorrect Data</option>
+                    <option value="option 4">General Feedback</option>
                   </select>
                 </div>
 

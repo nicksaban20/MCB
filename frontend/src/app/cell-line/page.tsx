@@ -5,7 +5,7 @@ import React from "react";
 export default function CellLineAuthentication() {
   return (
     <section className="bg-white rounded-lg shadow px-6 py-8 space-y-6 mt-10">
-      <h2 className="text-2xl font-bold text-[#002676]">Cell Line Authentication (CLA)</h2>
+      <h2 className="text-2xl font-bold text-[#002676]">DNA Quantification</h2>
 
       <p className="text-gray-700">
         We perform <span className="font-semibold">Human Cell Line Authentication</span> using
