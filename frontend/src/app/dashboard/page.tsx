@@ -27,7 +27,7 @@ const Dashboard = async () => {
 
     return (
         <div className="bg-white">
-            <Navbar profilePicUrl={avatarUrl} />
+            <Navbar profilePicUrl={avatarUrl} user={user} />
             <div className="bg-white min-h-screen mx-8 p-6">
                 <div className="mb-6">
                     <h1 className="text-3xl text-gray-600 font-bold">Welcome Back!</h1>

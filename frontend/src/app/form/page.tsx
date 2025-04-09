@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import Navbar from "../navbar/page";
 import ContactPage from "../contact-page/page";
-import { AiOutlineDownload, AiOutlineCloudUpload } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlineCloudUpload, AiOutlineMail } from "react-icons/ai";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
+import { useRef } from "react";
+
 /* ================================
    MAIN PARENT COMPONENT: Form
 ================================ */
@@ -14,13 +16,23 @@ export default function Form() {
   const [currentStep, setCurrentStep] = useState(1);
   const supabase = createClient();
 
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data, error } = await supabase.auth.getUser();
+  
       if (error || !data?.user) {
         router.push('/login');
+      } else {
+        setUser(data.user);
       }
+  
+      setLoading(false);
     };
+  
     checkAuth();
   }, [router]);
 
@@ -33,7 +45,7 @@ export default function Form() {
     dnaQuantity: "",
     primerDetails: "",
     plateName: "",
-    
+
     // Step 3 - Contact
     firstName: "",
     lastName: "",
@@ -85,44 +97,37 @@ export default function Form() {
 
   return (
     <>
-      <Navbar profilePicUrl={""} />
+    
+      <Navbar profilePicUrl={""} user={user} />
       <div className="flex min-h-screen bg-[#dfe1e6] p-6 text-gray-600 gap-15">
-        {/* LEFT NAV CONTAINER */}
-        <div className="w-1/6 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 max-h-[65vh]">
+        {/* LEFT NAV CONTAINER - Updated to match Figma design */}
+        <div className="w-[300px] mt-10 bg-white rounded-xl shadow-lg px-8 py-8 ml-10 flex flex-col h-full">
           {/* Title & Subtitle */}
-          <h2 className="text-2xl font-bold text-[#002676] mb-1.5">
-            {steps[currentStep - 1].toUpperCase()}
-          </h2>
-          <p className="text-sm text-gray-500 mb-6">
-            Lorem ipsum dolor sit amet consectetur.
-          </p>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-[#0A215C]">
+              {currentStep === 1 ? "SPECIFY ORDER" : 
+              currentStep === 2 ? "SAMPLE DETAILS" : 
+              currentStep === 3 ? "CONTACT" : "SUBMIT"}
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Lorem ipsum dolor sit amet consectetur.
+            </p>
+          </div>
 
-          {/* YELLOW INFO BOX */}
-          <div className="flex items-center gap-2 p-2 bg-[#FFF5DB] border-1 border-[#feb516] rounded-xl mb-8">
+        {/* YELLOW INFO BOX */}
+        <div className="flex items-start gap-3 bg-[#FFF5DB] border border-[#FDC844] rounded-lg mb-8 p-4">
             {/* Exclamation Icon */}
             <div className="ml-2 mr-1 flex font-[var(--font-inter)] items-center justify-center w-11 h-5 rounded-full bg-[#FFF5DB] border-2 border-black text-black text-sm">
               !
             </div>
 
-            {/* Message Content */}
-            <p className=" mt-1 mb-1 text-xs font-[var(--font-inter)] text-[#1a1a1a]">
-              Please read through the{" "}
-              <a
-                href="/guidelines"
-                className="font-semibold text-xs text-[#1a1a1a]"
-                target="_blank"
-                rel="noreferrer"
+          {/* Text Content */}
+          <span className="text-[10px] leading-tight text-[#1a1a1a]">
+            Please read through the <strong className="font-semibold">sampling guidelines</strong> before submitting order requests!
+          </span>
+        </div>
 
-              >
-                sampling guidelines
-              </a>{" "}
-              before submitting order requests!
-            </p>
-          </div>
-
-
-          {/* STEP PROGRESS BUBBLES */}
-          <div className="space-y-6">
+        <div className="space-y-6">
             {steps.map((step, index) => {
               const stepNumber = index + 1;
               const isActive = currentStep === stepNumber;
@@ -150,7 +155,7 @@ export default function Form() {
                     {/* Circle */}
                     <div
                       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center
-                      ${isActive
+                        ${isActive
                           ? "border-yellow-500 bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]"
                           : isCompleted ? "border-yellow-500 bg-yellow-500"
                             : "border-gray-300 bg-white"
@@ -190,14 +195,12 @@ export default function Form() {
                           }`}
                       ></div>
                     )}
-
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
-
 
         {/* Right form content */}
         <div className="w-3/4 mt-10 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] px-6 py-6 ml-10 mr-15">
@@ -327,7 +330,15 @@ function StepOne({ formData, setFormData }: any) {
                   : "border-gray-400"
                 }`}
             />
-            <span className="w-full text-gray-400 text-sm">{opt}</span>
+            <span 
+              className={`w-full text-sm ${
+                formData.sampleTypeStep1 === opt
+                  ? "text-black font-semibold"
+                  : "text-gray-400"
+              }`}
+            >
+              {opt}
+            </span>
           </label>
         ))}
       </div>
@@ -411,6 +422,8 @@ function StepTwo({ formData, setFormData }: any) {
       // etc.
     }));
   };
+
+  //if (loading) return null;
 
   return (
     <div className="max-w-5xl mx-auto p-8" onBlur={syncToFormData}>
@@ -561,6 +574,7 @@ function StepTwo({ formData, setFormData }: any) {
           <input
             type="text"
             placeholder="(ng/µL)"
+            name="dnaQuantity"
             value={dnaQuantity}
             onChange={(e) => setDnaQuantity(e.target.value)}
             className="w-32 p-2 border border-gray-300 rounded"
@@ -576,6 +590,7 @@ function StepTwo({ formData, setFormData }: any) {
         <textarea
           placeholder="Type..."
           value={primerDetails}
+          name="primerDetails"
           onChange={(e) => setPrimerDetails(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mb-6"
         />
@@ -586,6 +601,7 @@ function StepTwo({ formData, setFormData }: any) {
         <input
           type="text"
           placeholder="Type..."
+          name="plateNameFull"
           value={plateNameFull}
           onChange={(e) => setPlateNameFull(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mb-4"
@@ -618,6 +634,7 @@ function StepTwo({ formData, setFormData }: any) {
           type="text"
           placeholder="Type..."
           value={plateNameLarge}
+          
           onChange={(e) => setPlateNameLarge(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded"
         />
@@ -635,13 +652,110 @@ function ReviewOrder({ formData, goBack }: any) {
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToGuidelines, setAgreedToGuidelines] = useState(false);
+  const contentRef = useRef(null);
+ 
+
+  const handleDownloadPDF = () => {
+    const element = contentRef.current;
+    if (!element) return;
+  
+    // Clone the DOM node
+    const clone = element.cloneNode(true) as HTMLElement;
+  
+    // Append clone off-screen
+    clone.style.position = "absolute";
+    clone.style.left = "-9999px";
+    document.body.appendChild(clone);
+  
+    // Walk the cloned DOM and override unsupported oklch colors
+    const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT);
+    while (walker.nextNode()) {
+      const el = walker.currentNode as HTMLElement;
+      const style = getComputedStyle(el);
+  
+      if (style.color.includes("oklch")) {
+        el.style.color = "#000";
+      }
+  
+      if (style.backgroundColor.includes("oklch")) {
+        el.style.backgroundColor = "#fff";
+      }
+  
+      // Optional: add more overrides here (borders, box shadows, etc.)
+    }
+  
+    // Generate the PDF
+    html2canvas(clone).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+
+      
+      pdf.addImage(imgData, "JPEG", canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8);
+      pdf.save("dna_order_summary.pdf");
+  
+      // Clean up
+      document.body.removeChild(clone);
+    }).catch((err) => {
+      console.error("Error generating PDF:", err);
+      document.body.removeChild(clone);
+    });
+  };
+  
+  const handleDownloadAndMailto = async () => {
+    const element = contentRef.current;
+    if (!element) return;
+  
+    // Clone for cleaner rendering
+    const clone = element.cloneNode(true) as HTMLElement;
+    clone.style.position = "absolute";
+    clone.style.left = "-9999px";
+    document.body.appendChild(clone);
+  
+    const walker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT);
+    while (walker.nextNode()) {
+      const el = walker.currentNode as HTMLElement;
+      const style = getComputedStyle(el);
+  
+      if (style.color.includes("oklch")) el.style.color = "#000";
+      if (style.backgroundColor.includes("oklch")) el.style.backgroundColor = "#fff";
+    }
+  
+    try {
+      const canvas = await html2canvas(clone);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+  
+      pdf.addImage(imgData, "JPEG", canvas.width * 0.1, canvas.height * 0.1, canvas.width * 0.8, canvas.height * 0.8);
+      pdf.save("dna_order_summary.pdf");
+  
+      // Open mail client
+      const subject = encodeURIComponent("DNA Order Summary");
+      const body = encodeURIComponent(
+        "Hi,\n\nI'm sharing the DNA order summary. Please find the attached PDF.\n\n(You’ll need to manually attach the downloaded file: dna_order_summary.pdf)"
+      );
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    } catch (err) {
+      console.error("Failed to generate PDF or open email:", err);
+    } finally {
+      document.body.removeChild(clone);
+    }
+  };
+  
 
   const handleSubmit = async () => {
     try {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
-  
+
       const userId = user?.id ?? 1; // fallback to 1 if user.id is null or undefined
-  
+
       const address = `${formData.streetAddress}, ${formData.city}, ${formData.state} ${formData.zipCode}`;
       console.log("Submitting user_profile:", {
         user_id: userId,
@@ -669,7 +783,7 @@ function ReviewOrder({ formData, goBack }: any) {
           chartstring: formData.chartstring,
         }
       ]);
-      
+
       if (error) {
         console.error("Supabase insert error:", error);
         alert("There was an error saving your contact information.");
@@ -692,7 +806,7 @@ function ReviewOrder({ formData, goBack }: any) {
       alert("Unexpected error occurred.");
     }
   };
-  
+
 
   if (orderSubmitted) {
     return (
@@ -705,200 +819,212 @@ function ReviewOrder({ formData, goBack }: any) {
     );
   }
 
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-md shadow space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-semibold">Order Summary</h2>
-        <p className="text-gray-500">lorem ipsum dolor set amet.</p>
+      
+      <div ref={contentRef} className="max-w-4xl mx-auto p-6 bg-white rounded-md shadow space-y-6">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold">Order Summary</h2>
+          <p className="text-gray-500">lorem ipsum dolor set amet.</p>
+        </div>
+
+        {/* (Contact Info) placeholder if you have them in formData */}
+        <section>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold text-gray-700">Contact Information</h3>
+            <button
+              className="text-sm text-blue-600 hover:underline"
+              onClick={() => alert("Edit Contact Info (placeholder)")}
+            >
+              ✎
+            </button>
+          </div>
+          <div className="border rounded p-4 flex flex-col md:flex-row gap-6">
+            <div className="flex-1 space-y-1 text-sm">
+              <p>
+                <span className="font-semibold">Name</span>:{" "}
+                {formData.name || "John Doe"}
+              </p>
+              <p>
+                <span className="font-semibold">Phone</span>:{" "}
+                {formData.phone || "(123)456-7890"}
+              </p>
+              <p>
+                <span className="font-semibold">Email</span>:{" "}
+                {formData.email || "jd@email.com"}
+              </p>
+              <p>
+                <span className="font-semibold">Address</span>:{" "}
+                {formData.address || "123 Street Way, City, ST #####"}
+              </p>
+            </div>
+            <div className="flex-1 space-y-1 text-sm">
+              <p>
+                <span className="font-semibold">Chartstring</span>:{" "}
+                {formData.chartstring || "0123456789"}
+              </p>
+              <p>
+                <span className="font-semibold">PI</span>:{" "}
+                {formData.pi || "Jane Doe"}
+              </p>
+              <p>
+                <span className="font-semibold">UC Dept/OC</span>:{" "}
+                {formData.department || "UCB MCB"}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* (Sample Info) from StepOne & StepTwo */}
+        <section>
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold text-gray-700">Sample Information</h3>
+            <button
+              className="text-sm text-blue-600 hover:underline"
+              onClick={() => alert("Edit Sample Info (placeholder)")}
+            >
+              ✎
+            </button>
+          </div>
+          <div className="border rounded p-4 flex flex-col md:flex-row gap-6 text-sm">
+            <div className="flex-1 space-y-1">
+              <p>
+                <span className="font-semibold">Sample Type</span>:{" "}
+                {formData.sampleTypeStep1 || "Sanger"}
+              </p>
+              <p>
+                <span className="font-semibold">DNA Type</span>:{" "}
+                {formData.dnaType || "Plasmid"}
+              </p>
+              <p>
+                <span className="font-semibold">DNA Quantity</span>:{" "}
+                {formData.dnaQuantity || "## ng/µL"}
+              </p>
+            </div>
+            <div className="flex-1 space-y-1">
+              <p>
+                <span className="font-semibold">Primer Details</span>:{" "}
+                {formData.primerDetails || "Lorem ipsum"}
+              </p>
+              <p>
+                <span className="font-semibold">Plate Name</span>:{" "}
+                {formData.plateName || "Lorem ipsum"}
+              </p>
+              <p>
+                <span className="font-semibold">Date</span>:{" "}
+                {formData.date || "MM/DD/YYYY"}
+              </p>
+            </div>
+          </div>
+
+          {/* Table from StepTwo */}
+          <div className="overflow-x-auto mt-4">
+            <table className="w-full border text-left text-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-3 py-2 border-r">No.</th>
+                  <th className="px-3 py-2 border-r">Name</th>
+                  <th className="px-3 py-2">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(formData.samples || []).map(
+                  (
+                    sample: { sampleNo: string; name: string; notes: string },
+                    idx: number
+                  ) => (
+                    <tr key={idx} className="border-b">
+                      <td className="px-3 py-2 border-r">
+                        {sample.sampleNo || idx + 1}
+                      </td>
+                      <td className="px-3 py-2 border-r">
+                        {sample.name || "Sample " + (idx + 1)}
+                      </td>
+                      <td className="px-3 py-2">
+                        {sample.notes || "lorem ipsum dolor sit amet."}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-2 flex items-center justify-between text-sm">
+            {/* Left side: Download */}
+            <div className="flex items-center gap-1 text-blue-600 cursor-pointer">
+              <AiOutlineDownload />
+              <span onClick={handleDownloadPDF} className="underline">
+                Download DNA Chart
+              </span>
+            </div>
+
+            {/* Right side: Share */}
+            <div
+              onClick={handleDownloadAndMailto}
+              className="flex items-center gap-1 text-blue-600 cursor-pointer underline"
+            >
+              <AiOutlineMail />
+              <span>Share your data</span>
+            </div>
+          </div>
+
+        </section>
+
+        {/* Checkboxes */}
+        {!orderSubmitted && (
+          <div className="text-sm space-y-2">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+              />
+              <span>
+                I have read the{" "}
+                <a className="underline" href="#!">
+                  Terms &amp; Conditions
+                </a>
+                .
+              </span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={agreedToGuidelines}
+                onChange={(e) => setAgreedToGuidelines(e.target.checked)}
+              />
+              <span>
+                The samples follow the{" "}
+                <a className="underline" href="#!">
+                  Sample Guidelines
+                </a>
+                .
+              </span>
+            </label>
+          </div>
+        )}
+
+        {/* Final Buttons */}
+        {!orderSubmitted && (
+          <div className="flex justify-end gap-4 mt-6">
+            <button
+              className="border border-gray-400 px-6 py-2 rounded-md hover:bg-gray-100"
+              onClick={goBack}
+            >
+              Back
+            </button>
+            <button
+              disabled={!agreedToTerms || !agreedToGuidelines}
+              onClick={handleSubmit}
+              className={`px-6 py-2 rounded-md text-white ${agreedToTerms && agreedToGuidelines
+                ? "bg-gray-900 hover:bg-gray-800"
+                : "bg-gray-400 cursor-not-allowed"
+                }`}
+            >
+              Submit Order
+            </button>
+          </div>
+        )}
       </div>
-
-      {/* (Contact Info) placeholder if you have them in formData */}
-      <section>
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="font-semibold text-gray-700">Contact Information</h3>
-          <button
-            className="text-sm text-blue-600 hover:underline"
-            onClick={() => alert("Edit Contact Info (placeholder)")}
-          >
-            ✎
-          </button>
-        </div>
-        <div className="border rounded p-4 flex flex-col md:flex-row gap-6">
-          <div className="flex-1 space-y-1 text-sm">
-            <p>
-              <span className="font-semibold">Name</span>:{" "}
-              {formData.name || "John Doe"}
-            </p>
-            <p>
-              <span className="font-semibold">Phone</span>:{" "}
-              {formData.phone || "(123)456-7890"}
-            </p>
-            <p>
-              <span className="font-semibold">Email</span>:{" "}
-              {formData.email || "jd@email.com"}
-            </p>
-            <p>
-              <span className="font-semibold">Address</span>:{" "}
-              {formData.address || "123 Street Way, City, ST #####"}
-            </p>
-          </div>
-          <div className="flex-1 space-y-1 text-sm">
-            <p>
-              <span className="font-semibold">Chartstring</span>:{" "}
-              {formData.chartstring || "0123456789"}
-            </p>
-            <p>
-              <span className="font-semibold">PI</span>:{" "}
-              {formData.pi || "Jane Doe"}
-            </p>
-            <p>
-              <span className="font-semibold">UC Dept/OC</span>:{" "}
-              {formData.department || "UCB MCB"}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* (Sample Info) from StepOne & StepTwo */}
-      <section>
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="font-semibold text-gray-700">Sample Information</h3>
-          <button
-            className="text-sm text-blue-600 hover:underline"
-            onClick={() => alert("Edit Sample Info (placeholder)")}
-          >
-            ✎
-          </button>
-        </div>
-        <div className="border rounded p-4 flex flex-col md:flex-row gap-6 text-sm">
-          <div className="flex-1 space-y-1">
-            <p>
-              <span className="font-semibold">Sample Type</span>:{" "}
-              {formData.sampleTypeStep1 || "Sanger"}
-            </p>
-            <p>
-              <span className="font-semibold">DNA Type</span>:{" "}
-              {formData.dnaType || "Plasmid"}
-            </p>
-            <p>
-              <span className="font-semibold">DNA Quantity</span>:{" "}
-              {formData.dnaQuantity || "## ng/µL"}
-            </p>
-          </div>
-          <div className="flex-1 space-y-1">
-            <p>
-              <span className="font-semibold">Primer Details</span>:{" "}
-              {formData.primerDetails || "Lorem ipsum"}
-            </p>
-            <p>
-              <span className="font-semibold">Plate Name</span>:{" "}
-              {formData.plateName || "Lorem ipsum"}
-            </p>
-            <p>
-              <span className="font-semibold">Date</span>:{" "}
-              {formData.date || "MM/DD/YYYY"}
-            </p>
-          </div>
-        </div>
-
-        {/* Table from StepTwo */}
-        <div className="overflow-x-auto mt-4">
-          <table className="w-full border text-left text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-3 py-2 border-r">No.</th>
-                <th className="px-3 py-2 border-r">Name</th>
-                <th className="px-3 py-2">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(formData.samples || []).map(
-                (
-                  sample: { sampleNo: string; name: string; notes: string },
-                  idx: number
-                ) => (
-                  <tr key={idx} className="border-b">
-                    <td className="px-3 py-2 border-r">
-                      {sample.sampleNo || idx + 1}
-                    </td>
-                    <td className="px-3 py-2 border-r">
-                      {sample.name || "Sample " + (idx + 1)}
-                    </td>
-                    <td className="px-3 py-2">
-                      {sample.notes || "lorem ipsum dolor sit amet."}
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-2 flex items-center gap-2 text-blue-600 text-sm cursor-pointer">
-          <AiOutlineDownload />
-          <span
-            onClick={() => alert("Download DNA Chart (placeholder)")}
-            className="underline"
-          >
-            Download DNA Chart
-          </span>
-        </div>
-      </section>
-
-      {/* Checkboxes */}
-      {!orderSubmitted && (
-        <div className="text-sm space-y-2">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-            />
-            <span>
-              I have read the{" "}
-              <a className="underline" href="#!">
-                Terms &amp; Conditions
-              </a>
-              .
-            </span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={agreedToGuidelines}
-              onChange={(e) => setAgreedToGuidelines(e.target.checked)}
-            />
-            <span>
-              The samples follow the{" "}
-              <a className="underline" href="#!">
-                Sample Guidelines
-              </a>
-              .
-            </span>
-          </label>
-        </div>
-      )}
-
-      {/* Final Buttons */}
-      {!orderSubmitted && (
-        <div className="flex justify-end gap-4 mt-6">
-          <button
-            className="border border-gray-400 px-6 py-2 rounded-md hover:bg-gray-100"
-            onClick={goBack}
-          >
-            Back
-          </button>
-          <button
-            disabled={!agreedToTerms || !agreedToGuidelines}
-            onClick={handleSubmit}
-            className={`px-6 py-2 rounded-md text-white ${agreedToTerms && agreedToGuidelines
-              ? "bg-gray-900 hover:bg-gray-800"
-              : "bg-gray-400 cursor-not-allowed"
-              }`}
-          >
-            Submit Order
-          </button>
-        </div>
-      )}
-    </div>
   );
 }

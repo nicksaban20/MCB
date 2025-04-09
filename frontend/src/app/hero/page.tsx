@@ -3,14 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../navbar/page";
-import React, { useState } from "react";
 import { sendContactEmail } from "../actions/email";
+import React from "react";
+import { useState, useEffect } from "react";
 
 import dynamic from "next/dynamic";
 import LocationsSection from "../drop-off/page";
 
 import OrderCarousel from '@/components/OrderCarousel';
 
+import { createClient } from "@/utils/supabase/client";
 
 
 export default function Hero() {
@@ -72,11 +74,28 @@ export default function Hero() {
             setIsSubmitting(false);
         }
     };   
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+  
+    useEffect(() => {
+      const fetchUser = async () => {
+        const { data, error } = await supabase.auth.getUser();
+        console.log("Fetched user:", data?.user);
+        if (data?.user) {
+          setUser(data.user);
+        }
+        setLoading(false); // ✅ tell React we're done fetching
+      };
+      fetchUser();
+    }, []);
+  
+    if (loading) return null;
 
     return (
 
         <div className="bg-gray-100 min-h-screen">
-            <Navbar profilePicUrl="/assets/mcb_icon.png" />
+            <Navbar profilePicUrl="/assets/mcb_icon.png" user={user} />
 
             {/* Hero Section */}
             <section
