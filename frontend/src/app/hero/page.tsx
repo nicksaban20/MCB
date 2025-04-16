@@ -3,18 +3,99 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../navbar/page";
+import { sendContactEmail } from "../actions/email";
 import React from "react";
+import { useState, useEffect } from "react";
 
 import dynamic from "next/dynamic";
 import LocationsSection from "../drop-off/page";
 
+import OrderCarousel from '@/components/OrderCarousel';
+
+import { createClient } from "@/utils/supabase/client";
 
 
 export default function Hero() {
+
+    // state for form fields
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        organization: "",
+        email: "",
+        phone: "",
+        message: ""
+    });
+
+    // state for form submission
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitResult, setSubmitResult] = useState<{
+        success?: boolean;
+        error?: string;
+    } | null>(null);
+
+     // handle input changes
+     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // handle form submission
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitResult(null);
+
+        try {
+            const result = await sendContactEmail(formData);
+            setSubmitResult(result);
+            
+            if (result.success) {
+                // reset form on success
+                setFormData({
+                    firstName: "",
+                    lastName: "",
+                    organization: "",
+                    email: "",
+                    phone: "",
+                    message: ""
+                });
+            }
+        } catch (error) {
+            console.error("Form submission error:", error);
+            setSubmitResult({
+                success: false,
+                error: "An unexpected error occurred. Please try again later."
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };   
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const supabase = createClient();
+  
+    useEffect(() => {
+      const fetchUser = async () => {
+        const { data, error } = await supabase.auth.getUser();
+        console.log("Fetched user:", data?.user);
+        if (data?.user) {
+          setUser(data.user);
+        }
+        setLoading(false); // ✅ tell React we're done fetching
+      };
+      fetchUser();
+    }, []);
+  
+    if (loading) return null;
+
     return (
 
         <div className="bg-gray-100 min-h-screen">
-            <Navbar profilePicUrl="/assets/mcb_icon.png" />
+            <Navbar profilePicUrl="/assets/mcb_icon.png" user={user} />
 
             {/* Hero Section */}
             <section
@@ -45,7 +126,7 @@ export default function Hero() {
                 </div>
             </section>
 
-
+            <OrderCarousel />
 
             {/* Icons */}
             <section className="flex justify-center bg-white items-center w-full">
@@ -62,6 +143,37 @@ export default function Hero() {
                                 <h3 className="font-bold mt-4 text-black text-lg">{item.title}</h3>
                                 <p className="text-gray-600 text-sm">{item.description}</p>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+            
+
+            {/* Learn More Section */}
+            <section className="bg-white px-10 py-20">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-2xl text-black font-semibold mb-8">Learn More</h2>
+                    <div className="grid  text-black grid-cols-1 md:grid-cols-2 gap-8">
+                        {[
+                        [
+                            "CELL LINE / STEM CELL ANALYSIS",
+                            "Send us an aliquot of ~2 million cells, and we do the rest. Lyse, amplify, analyze, qualify, and send you the results!",
+                        ],
+                        [
+                            "WE DO NANOPORE SEQUENCING",
+                            "You provide a colony pick, plasmid, amplicon, etc… and we do the rest!",
+                        ],
+                        ].map(([title, description], index) => (
+                        <div
+                            key={index}
+                            className="rounded-xl overflow-hidden border border-gray-400"
+                        >
+                            <div className="h-24 bg-[#E6E8EC] w-full" />
+                            <div className="p-6 border-t border-gray-300">
+                            <h3 className="font-semibold text-sm mb-1">{title}</h3>
+                            <p className="text-sm text-gray-700">{description}</p>
+                            </div>
+                        </div>
                         ))}
                     </div>
                 </div>
@@ -120,43 +232,81 @@ export default function Hero() {
                     <div>
                         <h2 className="text-2xl text-gray-800 font-bold mb-2">Get In Touch</h2>
                         <p className="font-semibold text-sm text-gray-800 mb-6">Basic Information</p>
-                        <form className="space-y-4">
+                        
+                        {/* success message */}
+                        {submitResult?.success && (
+                            <div className="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-md">
+                                Thank you for your message! We'll get back to you soon.
+                            </div>
+                        )}
+                        
+                        {/* error message */}
+                        {submitResult?.error && (
+                            <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md">
+                                {submitResult.error}
+                            </div>
+                        )}
+                        
+                        <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="flex gap-4">
                                 <input
                                     type="text"
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleInputChange}
                                     placeholder="First Name"
-                                    className="flex-1 border text-gray-400 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                    className="flex-1 border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                    required
                                 />
                                 <input
                                     type="text"
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleInputChange}
                                     placeholder="Last Name"
-                                    className="flex-1 border text-gray-400 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                    className="flex-1 border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                    required
                                 />
                             </div>
                             <input
                                 type="text"
+                                name="organization"
+                                value={formData.organization}
+                                onChange={handleInputChange}
                                 placeholder="Organization Name"
-                                className="w-full border text-gray-400 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                className="w-full border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
                             />
                             <input
                                 type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
                                 placeholder="Email"
-                                className="w-full border text-gray-400 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                className="w-full border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                required
                             />
                             <input
                                 type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleInputChange}
                                 placeholder="Phone"
-                                className="w-full border text-gray-400 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                className="w-full border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
                             />
                             <textarea
+                                name="message"
+                                value={formData.message}
+                                onChange={handleInputChange}
                                 placeholder="Message"
-                                className="w-full border text-gray-400 border-gray-400 rounded-md px-4 py-2 text-sm h-32"
+                                className="w-full border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm h-32"
+                                required
                             ></textarea>
                             <button
                                 type="submit"
-                                className="w-full bg-black border-gray-300 text-white py-2 rounded-md hover:bg-gray-800 text-sm"
+                                disabled={isSubmitting}
+                                className="w-full bg-black border-gray-300 text-white py-2 rounded-md hover:bg-gray-800 text-sm disabled:bg-gray-500 disabled:cursor-not-allowed"
                             >
-                                Send
+                                {isSubmitting ? "Sending..." : "Send"}
                             </button>
                         </form>
                     </div>
