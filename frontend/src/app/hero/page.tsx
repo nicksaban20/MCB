@@ -313,6 +313,34 @@ export default function Hero() {
                 </div>
             </section>
 
+            {/* Social Media Footer */}
+            <footer className="bg-gray-100 py-6">
+                <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
+                    <p className="text-gray-700 mb-4 font-medium">Connect with us</p>
+                    <div className="flex space-x-6">
+                        <a 
+                            href="https://www.linkedin.com/company/uc-berkeley-dna-sequencing-facility/" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-gray-700 hover:text-blue-600 transition-colors"
+                            aria-label="LinkedIn"
+                        >
+                            <img src="/assets/linkedin.svg" alt="LinkedIn" width="24" height="24" className="h-6 w-6" />
+                        </a>
+                        <a 
+                            href="https://x.com/berkeley_dnaseq" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-gray-700 hover:text-black transition-colors"
+                            aria-label="X (Twitter)"
+                        >
+                            <img src="/assets/twitter-x.svg" alt="X (Twitter)" width="24" height="24" className="h-6 w-6" />
+                        </a>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-4">© {new Date().getFullYear()} UC Berkeley DNA Sequencing Facility</p>
+                </div>
+            </footer>
+
         </div>
     );
 }
