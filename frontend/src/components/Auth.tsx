@@ -27,7 +27,7 @@ const Auth = () => {
       email,
       password,
       options: {
-        data: { firstName, lastName, organization, phone },
+        data: { firstName, lastName, organization, phone, is_admin: false },
       },
     });
     if (error) alert(error.message);

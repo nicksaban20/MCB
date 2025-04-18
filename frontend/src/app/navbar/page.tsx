@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
@@ -8,7 +8,12 @@ import { useRouter } from 'next/navigation';
 
 const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) => {
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
   const supabase = createClient();
+
+  useEffect(() => {
+      setIsAdmin(user?.user_metadata.is_admin)
+  }, [user, supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -37,6 +42,13 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
         <li className="hover:font-bold cursor-pointer">PRICING</li>
         <li className="hover:font-bold cursor-pointer">MORE</li>
         <li className="hover:font-bold cursor-pointer"><Link href="/contact">FEEDBACK</Link></li>
+
+        {/* Show Admin Dashboard link if user is an admin */}
+        {isAdmin && (
+          <li className="hover:font-bold cursor-pointer">
+            <Link href="/admin-dash">ADMIN DASHBOARD</Link>
+          </li>
+        )}
 
         {/* Show Sign Out or Sign In depending on user */}
         {user ? (
