@@ -32,8 +32,8 @@ export default function Navbar({
     <nav
       className={`fixed inset-x-0 top-0 z-50 w-full px-4 transition-all duration-300
         ${scrolled
-          ? 'bg-transparent border-none backdrop-blur-0'
-          : 'bg-white/5 border-b border-transparent backdrop-blur-sm'}
+          ? 'bg-transparent border-none'
+          : 'bg-transparent border-none border-transparent'}
       `}
     >      
       <div className="mx-auto flex max-w-8xl items-center justify-between py-3">
@@ -49,7 +49,6 @@ export default function Navbar({
       
         <ul
           className={`flex gap-8 text-white font-medium items-center
-            transition-all duration-300
             ${scrolled ? 'opacity-0 pointer-events-none -translate-y-1' :
                          'opacity-100 translate-y-0'}
           `}
