@@ -1,61 +1,86 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { createClient } from '@/utils/supabase/client';
+import Image   from 'next/image';
+import Link    from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
-const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) => {
-  const router = useRouter();
+export default function Navbar({
+  profilePicUrl,
+  user,
+}: {
+  profilePicUrl: string;
+  user: any;
+}) {
+  const [scrolled, setScrolled] = useState(false);
+  const router   = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push('/login'); // optional: redirect to login
+    router.push('/login');
   };
 
   return (
-    <nav className="bg-[#1e3c7100] py-2 px-6 flex justify-between items-center">
-      {/* Logo Placeholder */}
-      <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center border-2 border-white p-0.5 justify-center text-xs text-gray-600">
-        <Link href="/profile">
+    <nav
+      className={`fixed inset-x-0 top-0 z-50 w-full px-4 transition-all duration-300
+        ${scrolled
+          ? 'bg-transparent border-none backdrop-blur-0'
+          : 'bg-white/5 border-b border-transparent backdrop-blur-sm'}
+      `}
+    >      
+      <div className="mx-auto flex max-w-8xl items-center justify-between py-3">
+      <Link href="/profile" className="shrink-0">
           <Image
             src="/assets/mcb_icon.png"
-            alt="MCB Logo"
+            alt="MCB logo"
             width={48}
             height={48}
-            className="object-cover"
+            className="rounded-full border-2 border-white object-cover"
           />
         </Link>
+      
+        <ul
+          className={`flex gap-8 text-white font-medium items-center
+            transition-all duration-300
+            ${scrolled ? 'opacity-0 pointer-events-none -translate-y-1' :
+                         'opacity-100 translate-y-0'}
+          `}
+        >
+          <li className="hover:font-bold"><Link href="/dashboard">HOME</Link></li>
+          <li className="hover:font-bold"><Link href="/services">SERVICES</Link></li>
+          <li className="hover:font-bold"><Link href="/form">ORDER&nbsp;FORMS</Link></li>
+          <li className="hover:font-bold"><Link href="/pricing">PRICING</Link></li>
+          <li className="hover:font-bold"><Link href="/more">MORE</Link></li>
+          <li className="hover:font-bold"><Link href="/contact">FEEDBACK</Link></li>
+
+          {user ? (
+            <li>
+              <button
+                onClick={handleLogout}
+                className="rounded-xl border border-white px-5 py-2 text-sm transition hover:bg-white/20"
+              >
+                SIGN&nbsp;OUT
+              </button>
+            </li>
+          ) : (
+            <li>
+              <Link href="/login">
+                <button className="rounded-xl border border-white px-5 py-2 text-sm transition hover:bg-white/20">
+                  SIGN&nbsp;IN
+                </button>
+              </Link>
+            </li>
+          )}
+        </ul>        
       </div>
-
-      <ul className="flex space-x-8 text-white font-medium items-center">
-        <li className="hover:font-bold cursor-pointer"><Link href="/dashboard">HOME</Link></li>
-        <li className="hover:font-bold cursor-pointer">SERVICES</li>
-        <li className="hover:font-bold cursor-pointer"><Link href="/form">ORDER FORMS</Link></li>
-        <li className="hover:font-bold cursor-pointer">PRICING</li>
-        <li className="hover:font-bold cursor-pointer">MORE</li>
-        <li className="hover:font-bold cursor-pointer"><Link href="/contact">FEEDBACK</Link></li>
-
-        {/* Show Sign Out or Sign In depending on user */}
-        {user ? (
-          <button
-            onClick={handleLogout}
-            className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition"
-          >
-            SIGN OUT
-          </button>
-        ) : (
-          <Link href="/login">
-            <button className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition">
-              SIGN IN
-            </button>
-          </Link>
-        )}
-      </ul>
     </nav>
   );
-};
-
-export default Navbar;
+}
