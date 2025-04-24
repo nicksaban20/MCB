@@ -1,22 +1,22 @@
 'use client';
 
+
 import Image   from 'next/image';
 import Link    from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
-export default function Navbar({
-  profilePicUrl,
-  user,
-}: {
-  profilePicUrl: string;
-  user: any;
-}) {
-  const [scrolled, setScrolled] = useState(false);
-  const router   = useRouter();
+const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) => {
+  const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
   const supabase = createClient();
 
+  useEffect(() => {
+      setIsAdmin(user?.user_metadata.is_admin)
+  }, [user, supabase]);
+   
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll);
@@ -60,26 +60,30 @@ export default function Navbar({
           <li className="hover:font-bold"><Link href="/more">MORE</Link></li>
           <li className="hover:font-bold"><Link href="/contact">FEEDBACK</Link></li>
 
-          {user ? (
-            <li>
-              <button
-                onClick={handleLogout}
-                className="rounded-xl border border-white px-5 py-2 text-sm transition hover:bg-white/20"
-              >
-                SIGN&nbsp;OUT
-              </button>
-            </li>
-          ) : (
-            <li>
-              <Link href="/login">
-                <button className="rounded-xl border border-white px-5 py-2 text-sm transition hover:bg-white/20">
-                  SIGN&nbsp;IN
-                </button>
-              </Link>
-            </li>
-          )}
-        </ul>        
-      </div>
+
+        {/* Show Admin Dashboard link if user is an admin */}
+        {isAdmin && (
+          <li className="hover:font-bold cursor-pointer">
+            <Link href="/admin-dash">ADMIN DASHBOARD</Link>
+          </li>
+        )}
+
+        {/* Show Sign Out or Sign In depending on user */}
+        {user ? (
+          <button
+            onClick={handleLogout}
+            className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition"
+          >
+            SIGN OUT
+          </button>
+        ) : (
+          <Link href="/login">
+            <button className="px-5 py-2 border border-white text-white rounded-xl text-sm hover:bg-[#485486a2] transition">
+              SIGN IN
+            </button>
+          </Link>
+        )}
+      </ul>
     </nav>
   );
 }

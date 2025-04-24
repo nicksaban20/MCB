@@ -1,6 +1,8 @@
 import React from 'react';
-import { FiClock, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/utils/supabase/server'; // server-side supabase
 import Navbar from '../navbar/page';
+import { FiClock, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
 
 const submissions = [
   {
@@ -29,10 +31,22 @@ const statusStyles: Record<string, string> = {
   Rejected: 'bg-red-100 text-red-800',
 };
 
-const AdminDashboard = () => {
+const AdminDashboard = async () => {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.user_metadata.is_admin) {
+    redirect('/unauthorized');
+  }
+
+  const { data, error } = await supabase.auth.getUser();
+
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Navbar />
+      <Navbar profilePicUrl='/assets/mcb_icon.png' user={data?.user} />
       <div className="flex">
         <div className="w-full md:w-3/4 p-10 bg-white rounded-l-xl shadow-xl">
           <h1 className="text-3xl font-semibold mb-2">Dashboard</h1>
