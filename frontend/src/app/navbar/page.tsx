@@ -84,6 +84,8 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
           </Link>
         )}
       </ul>
+      </div>
     </nav>
   );
 }
+export default Navbar;
