@@ -34,8 +34,8 @@ export default function Hero() {
         error?: string;
     } | null>(null);
 
-     // handle input changes
-     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // handle input changes
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -52,7 +52,7 @@ export default function Hero() {
         try {
             const result = await sendContactEmail(formData);
             setSubmitResult(result);
-            
+
             if (result.success) {
                 // reset form on success
                 setFormData({
@@ -73,23 +73,23 @@ export default function Hero() {
         } finally {
             setIsSubmitting(false);
         }
-    };   
+    };
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const supabase = createClient();
-  
+
     useEffect(() => {
-      const fetchUser = async () => {
-        const { data, error } = await supabase.auth.getUser();
-        console.log("Fetched user:", data?.user);
-        if (data?.user) {
-          setUser(data.user);
-        }
-        setLoading(false); // ✅ tell React we're done fetching
-      };
-      fetchUser();
+        const fetchUser = async () => {
+            const { data, error } = await supabase.auth.getUser();
+            console.log("Fetched user:", data?.user);
+            if (data?.user) {
+                setUser(data.user);
+            }
+            setLoading(false); // ✅ tell React we're done fetching
+        };
+        fetchUser();
     }, []);
-  
+
     if (loading) return null;
 
     return (
@@ -99,31 +99,29 @@ export default function Hero() {
 
             {/* Hero Section */}
             <section
-                className="relative h-screen w-full px-10 py-20 flex flex-col lg:flex-row justify-between items-start lg:items-center bg-cover bg-center"
+                className="relative h-[115vh] w-full px-10 py-20 flex flex-col lg:flex-row justify-between items-start lg:items-center bg-cover bg-top"
                 style={{
                     backgroundImage: 'url("/assets/hero.png")',
                 }}
             >
                 {/* White fade at bottom */}
-                <div className="absolute bottom-0 left-0 w-full h-60 bg-gradient-to-t from-white via-white/80 to-transparent z-10" />
+                <div className="absolute bottom-0 left-0 w-full h-30 bg-gradient-to-t from-white via-white/75 to-transparent z-10" />
 
                 {/* Main content */}
-                <div className="relative z-20 p-6 rounded-lg max-w-xl">
-                    <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight text-white">
-                        BERKELEY <br /> SEQUENCING LAB
-                    </h1>
-                    <p className="text-white text-sm lg:text-base mb-6">
-                        Lorem ipsum dolor sit amet...
-                    </p>
-                    <div className="flex gap-4">
-                        <button className="bg-[#FDB517] text-blue-950 px-6 py-2 text-sm rounded hover:bg-[#FFC52A] transition">
-                            START SEQUENCING
-                        </button>
-                        <button className="border-2 border-white text-white px-6 py-2 text-sm rounded-md hover:bg-gray-400 transition">
-                            CONTACT US
-                        </button>
-                    </div>
-                </div>
+                <h1
+                    className="
+                    absolute 
+                    top-1/2 left-1/4
+                    transform -translate-x-1/5 -translate-y-1/2 
+                    text-white text-10xl lg:text-6xl font-bold 
+                    z-20
+                    "
+                >
+                    Placeholder
+                </h1>
+
+
+
             </section>
 
             <OrderCarousel />
@@ -147,7 +145,7 @@ export default function Hero() {
                     </div>
                 </div>
             </section>
-            
+
 
             {/* Learn More Section */}
             <section className="bg-white px-10 py-20">
@@ -155,25 +153,25 @@ export default function Hero() {
                     <h2 className="text-2xl text-black font-semibold mb-8">Learn More</h2>
                     <div className="grid  text-black grid-cols-1 md:grid-cols-2 gap-8">
                         {[
-                        [
-                            "CELL LINE / STEM CELL ANALYSIS",
-                            "Send us an aliquot of ~2 million cells, and we do the rest. Lyse, amplify, analyze, qualify, and send you the results!",
-                        ],
-                        [
-                            "WE DO NANOPORE SEQUENCING",
-                            "You provide a colony pick, plasmid, amplicon, etc… and we do the rest!",
-                        ],
+                            [
+                                "CELL LINE / STEM CELL ANALYSIS",
+                                "Send us an aliquot of ~2 million cells, and we do the rest. Lyse, amplify, analyze, qualify, and send you the results!",
+                            ],
+                            [
+                                "WE DO NANOPORE SEQUENCING",
+                                "You provide a colony pick, plasmid, amplicon, etc… and we do the rest!",
+                            ],
                         ].map(([title, description], index) => (
-                        <div
-                            key={index}
-                            className="rounded-xl overflow-hidden border border-gray-400"
-                        >
-                            <div className="h-24 bg-[#E6E8EC] w-full" />
-                            <div className="p-6 border-t border-gray-300">
-                            <h3 className="font-semibold text-sm mb-1">{title}</h3>
-                            <p className="text-sm text-gray-700">{description}</p>
+                            <div
+                                key={index}
+                                className="rounded-xl overflow-hidden border border-gray-400"
+                            >
+                                <div className="h-24 bg-[#E6E8EC] w-full" />
+                                <div className="p-6 border-t border-gray-300">
+                                    <h3 className="font-semibold text-sm mb-1">{title}</h3>
+                                    <p className="text-sm text-gray-700">{description}</p>
+                                </div>
                             </div>
-                        </div>
                         ))}
                     </div>
                 </div>
@@ -232,21 +230,21 @@ export default function Hero() {
                     <div>
                         <h2 className="text-2xl text-gray-800 font-bold mb-2">Get In Touch</h2>
                         <p className="font-semibold text-sm text-gray-800 mb-6">Basic Information</p>
-                        
+
                         {/* success message */}
                         {submitResult?.success && (
                             <div className="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-md">
                                 Thank you for your message! We'll get back to you soon.
                             </div>
                         )}
-                        
+
                         {/* error message */}
                         {submitResult?.error && (
                             <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md">
                                 {submitResult.error}
                             </div>
                         )}
-                        
+
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="flex gap-4">
                                 <input
@@ -318,18 +316,18 @@ export default function Hero() {
                 <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
                     <p className="text-gray-700 mb-4 font-medium">Connect with us</p>
                     <div className="flex space-x-6">
-                        <a 
-                            href="https://www.linkedin.com/company/uc-berkeley-dna-sequencing-facility/" 
-                            target="_blank" 
+                        <a
+                            href="https://www.linkedin.com/company/uc-berkeley-dna-sequencing-facility/"
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="text-gray-700 hover:text-blue-600 transition-colors"
                             aria-label="LinkedIn"
                         >
                             <img src="/assets/linkedin.svg" alt="LinkedIn" width="24" height="24" className="h-6 w-6" />
                         </a>
-                        <a 
-                            href="https://x.com/berkeley_dnaseq" 
-                            target="_blank" 
+                        <a
+                            href="https://x.com/berkeley_dnaseq"
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="text-gray-700 hover:text-black transition-colors"
                             aria-label="X (Twitter)"
