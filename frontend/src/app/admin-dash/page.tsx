@@ -165,7 +165,7 @@ export default function AdminDashboard() {
 
             {/* Volunteering Summary Section */}
             <div className="mb-10"> {/* Increased bottom margin */}
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Volunteering Summary</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Request Summary</h2>
               {/* Adjusted grid gap */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Stat Card - Approved */}
