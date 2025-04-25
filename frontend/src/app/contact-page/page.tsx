@@ -71,7 +71,7 @@ export default function ContactPage({
   };
 
   return (
-    <Box bg="white" w="100%" minH="100vh">
+    <Box w="100%" minH="100vh">
       <Container maxW="957px" py={0}>
         <Box w="800px" mx="auto" mt="65px" mb="45px">
           <VStack spacing={10} align="stretch">
@@ -124,8 +124,8 @@ export default function ContactPage({
                       onChange={(e) =>
                         setFormData((prev: any) => ({ ...prev, firstName: e.target.value }))
                       }
-                      bg="transparent"
-                      border="1px solid #E2E8F0"
+                      bg="white"
+                      border="1px solid gray"
                       borderRadius="8px"
                       h="48px"
                       px={6}
@@ -142,8 +142,8 @@ export default function ContactPage({
                       onChange={(e) =>
                         setFormData((prev: any) => ({ ...prev, lastName: e.target.value }))
                       }
-                      bg="transparent"
-                      border="1px solid #E2E8F0"
+                      bg="white"
+                      border="1px solid gray"
                       borderRadius="8px"
                       h="48px"
                       px={6}
@@ -161,8 +161,8 @@ export default function ContactPage({
                     onChange={(e) =>
                       setFormData((prev: any) => ({ ...prev, email: e.target.value }))
                     }
-                    bg="transparent"
-                    border="1px solid #E2E8F0"
+                    bg="white"
+                    border="1px solid gray"
                     borderRadius="8px"
                     h="48px"
                     px={6}
@@ -179,8 +179,8 @@ export default function ContactPage({
                     onChange={(e) =>
                       setFormData((prev: any) => ({ ...prev, phone: e.target.value }))
                     }
-                    bg="transparent"
-                    border="1px solid #E2E8F0"
+                    bg="white"
+                    border="1px solid gray"
                     borderRadius="8px"
                     h="48px"
                     px={6}
@@ -206,8 +206,8 @@ export default function ContactPage({
                     onChange={(e) =>
                       setFormData((prev: any) => ({ ...prev, streetAddress: e.target.value }))
                     }
-                    bg="transparent"
-                    border="1px solid #E2E8F0"
+                    bg="white"
+                    border="1px solid gray"
                     borderRadius="8px"
                     h="48px"
                     px={6}
@@ -225,8 +225,8 @@ export default function ContactPage({
                       onChange={(e) =>
                         setFormData((prev: any) => ({ ...prev, city: e.target.value }))
                       }
-                      bg="transparent"
-                      border="1px solid #E2E8F0"
+                      bg="white"
+                      border="1px solid gray"
                       borderRadius="8px"
                       h="48px"
                       px={6}
@@ -243,8 +243,8 @@ export default function ContactPage({
                       onChange={(e) =>
                         setFormData((prev: any) => ({ ...prev, state: e.target.value }))
                       }
-                      bg="transparent"
-                      border="1px solid #E2E8F0"
+                      bg="white"
+                      border="1px solid gray"
                       borderRadius="8px"
                       h="48px"
                       px={6}
@@ -261,8 +261,8 @@ export default function ContactPage({
                       onChange={(e) =>
                         setFormData((prev: any) => ({ ...prev, zipCode: e.target.value }))
                       }
-                      bg="transparent"
-                      border="1px solid #E2E8F0"
+                      bg="white"
+                      border="1px solid gray"
                       borderRadius="8px"
                       h="48px"
                       px={6}
@@ -289,8 +289,8 @@ export default function ContactPage({
                     onChange={(e) =>
                       setFormData((prev: any) => ({ ...prev, department: e.target.value }))
                     }
-                    bg="transparent"
-                    border="1px solid #E2E8F0"
+                    bg="white"
+                    border="1px solid gray"
                     borderRadius="8px"
                     h="48px"
                     px={6}
@@ -307,8 +307,8 @@ export default function ContactPage({
                     onChange={(e) =>
                       setFormData((prev: any) => ({ ...prev, pi: e.target.value }))
                     }
-                    bg="transparent"
-                    border="1px solid #E2E8F0"
+                    bg="white"
+                    border="1px solid gray"
                     borderRadius="8px"
                     h="48px"
                     px={6}
@@ -325,8 +325,8 @@ export default function ContactPage({
                     onChange={(e) =>
                       setFormData((prev: any) => ({ ...prev, chartstring: e.target.value }))
                     }
-                    bg="transparent"
-                    border="1px solid #E2E8F0"
+                    bg="white"
+                    border="1px solid gray"
                     borderRadius="8px"
                     h="48px"
                     w="100%"
