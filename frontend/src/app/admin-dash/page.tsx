@@ -1,16 +1,9 @@
 "use client";
 
 import React from 'react';
-<<<<<<< HEAD
 // Using specific icons for clarity and potential bundle size reduction
 import { FiClock, FiCheckCircle, FiXCircle, FiEdit2 } from 'react-icons/fi';
 import Navbar from '../navbar/page'; // Assuming Navbar component exists and works as expected
-=======
-import { redirect } from 'next/navigation';
-import { createClient } from '@/utils/supabase/server'; // server-side supabase
-import Navbar from '../navbar/page';
-import { FiClock, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
->>>>>>> 27d90fb91362a6e687666acfed533f5bcb3b2f5d
 
 export default function AdminDashboard() {
   // Mock data - replace with real data from your backend
@@ -144,34 +137,11 @@ export default function AdminDashboard() {
     }
   };
 
-<<<<<<< HEAD
   return (
     // Use a light gray background for the whole page container
     <div className="min-h-screen bg-gray-50">
       {/* Assume Navbar is styled correctly */}
       <Navbar profilePicUrl="" user={null} />
-=======
-const AdminDashboard = async () => {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user?.user_metadata.is_admin) {
-    redirect('/unauthorized');
-  }
-
-  const { data, error } = await supabase.auth.getUser();
-
-  return (
-    <div className="bg-gray-100 min-h-screen">
-      <Navbar profilePicUrl='/assets/mcb_icon.png' user={data?.user} />
-      <div className="flex">
-        <div className="w-full md:w-3/4 p-10 bg-white rounded-l-xl shadow-xl">
-          <h1 className="text-3xl font-semibold mb-2">Dashboard</h1>
-          <p className="mb-6 text-gray-500">Welcome back, John Doe</p>
->>>>>>> 27d90fb91362a6e687666acfed533f5bcb3b2f5d
 
       <div className="flex flex-row"> {/* Main content and sidebar layout */}
 
