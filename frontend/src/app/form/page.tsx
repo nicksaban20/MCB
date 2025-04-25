@@ -98,9 +98,9 @@ const steps = ["Specify Order", "Sample Details", "Drop‑off", "Contact", "Subm
     <>
     
       <Navbar profilePicUrl={""} user={user} />
-      <div className="flex min-h-screen bg-white p-6 text-gray-600 gap-15">
+      <div className="flex min-h-screen bg-[#F1F1F1] p-6 text-gray-600 gap-15">
         {/* LEFT NAV CONTAINER - Updated to match Figma design */}
-        <div className="w-[300px] mt-10 bg-[#F1F1F1] border border-gray-300 rounded-xl shadow-lg px-8 py-8 ml-10 flex flex-col h-full">
+        <div className="w-[300px] mt-10 bg-white  rounded-xl shadow-lg px-8 py-8 ml-10 flex flex-col h-full">
           {/* Title & Subtitle */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-[#0A215C]">
@@ -202,7 +202,7 @@ const steps = ["Specify Order", "Sample Details", "Drop‑off", "Contact", "Subm
         </div>
 
         {/* Right form content */}
-        <div className="w-3/4 mt-10 bg-[#F1F1F1] rounded-2xl border border-gray-300 shadow-lg px-6 py-6 ml-10 mr-15">
+        <div className="w-3/4 mt-10 bg-white rounded-2xl border border-gray-300 shadow-lg px-6 py-6 ml-10 mr-15">
           <form className="space-y-4 p-10">
 
             {currentStep === 1 && (
