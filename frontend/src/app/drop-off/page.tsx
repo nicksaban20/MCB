@@ -1,6 +1,7 @@
 'use client';
 
 import { FaStar } from 'react-icons/fa';
+import React from 'react';
 
 export default function LocationsSection() {
   const locations = [
@@ -37,44 +38,35 @@ export default function LocationsSection() {
   ];
 
   return (
-    <section className="bg-[#E6E8EC] px-10 py-20 text-sm text-gray-700">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
-        {/* Left Panel */}
-        <div className="col-span-1">
-          <h2 className="text-xl font-semibold text-black mb-2">
-            Find the Best Time & Place For You
-          </h2>
-          <hr className="border-gray-400 mb-4" />
-          <p className="mb-4 text-sm text-gray-600">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.
+    <div className="w-full h-screen bg-center bg-no-repeat bg-contain" 
+      style={{
+        backgroundImage: `url('/assets/bglocation.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="relative h-[700px]">
+        <div className="absolute top-10 left-10 w-[360px] p-6 bg-white rounded-lg shadow-lg">
+          
+          <img src="/assets/location.png" alt="Drop-off Icon" className="w-8 h-8 mb-2" />
+          <h2 className="text-xl text-blue-800">Drop-Off Locations</h2>
+
+          <hr className="my-2 border-gray-300"/>
+
+          <p className="text-gray-600 text-sm mb-4">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi.
+            Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis
+            ligula consectetur, ultrices mauris.
           </p>
-          <div className="flex items-start gap-2">
-            <FaStar className="text-[#FDB517] mt-1" />
-            <p>Please email us for pickup.</p>
-          </div>
-        </div>
 
-        {/* Right Panel - Locations Table */}
-        <div className="col-span-2">
-          <div className="grid grid-cols-2 border-b border-gray-400 pb-2 mb-4">
-            <h3 className="font-semibold text-gray-800">LOCATION</h3>
-            <h3 className="font-semibold text-gray-800">DIRECTION</h3>
-          </div>
-
-          {locations.map(({ place, direction, star }, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-2 gap-4 border border-[#CBD5E1] rounded-lg p-4 mb-3 bg-white"
-            >
-              <span className="text-black">{place}</span>
-              <span className="flex items-center gap-2">
-                {direction}
-                {star && <FaStar className="text-[#FDB517]" />}
-              </span>
-            </div>
-          ))}
+          <ul className="list-disc list-inside space-y-2 font-medium text-gray-900">
+            {locations.map(({ place }, index) => (
+              <li key={index}>{place}</li>
+            ))}
+          </ul>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

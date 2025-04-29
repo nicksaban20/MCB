@@ -139,7 +139,7 @@ const steps = ["Specify Order", "Sample Details", "Drop‑off", "Contact", "Subm
                   <div className="flex flex-col w-full">
                     <p className="text-xs text-gray-400">{`Step ${stepNumber}`}</p>
                     <p
-                      className={`text-md ${isActive
+                      className={`inter text-md ${isActive
                         ? "font-bold text-[#002676]"
                         : isCompleted
                           ? "font-bold text-gray-600"
@@ -245,7 +245,7 @@ const steps = ["Specify Order", "Sample Details", "Drop‑off", "Contact", "Subm
                 </button>
                 <button
                   type="button"
-                  className="w-18 py-1 text-white rounded text-sm bg-[#1b3c84] hover:bg-[#002676]"
+                  className="inter w-18 py-1 text-white rounded text-sm bg-[#1b3c84] hover:bg-[#002676]"
                   onClick={handleNext}
                 >
                   Next
