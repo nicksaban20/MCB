@@ -70,10 +70,12 @@ export default function SpecifyOrder({ formData, setFormData }: any) {
               >
                 {selected && <div className="w-2 h-2 bg-white rounded-full" />}
               </div>
-            </fieldset>
+            </label>
+          );
+          })}
           </div>
-        </div>
-      </div>
     </div>
+  
+    
   )
 }
