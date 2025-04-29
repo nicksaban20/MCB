@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 
 const sampleOptions = [
@@ -16,8 +16,11 @@ const sampleOptions = [
 ]
 
 export default function SpecifyOrder({ formData, setFormData }: any) {
+  const [selected, setSelected] = useState<string>(formData.sampleTypeStep1 || "");
+
   return (
     <div className="w-full">
+
       <h2 className="figtree mb-4 text-3xl font-bold text-[#3C445C] ml-20">
         Select Sample Type(s):
       </h2>
@@ -67,27 +70,9 @@ export default function SpecifyOrder({ formData, setFormData }: any) {
               >
                 {selected && <div className="w-2 h-2 bg-white rounded-full" />}
               </div>
-
-              {/* YOUR IMAGE HERE */}
-              <Image
-                src="/assets/solar_dna-bold.png"
-                alt="DNA icon"
-                width={100}
-                height={100}
-                className="mx-auto mt-20"
-              />
-
-              <span
-                className={`
-                 mt-auto text-center text-xl font-medium
-                  ${selected ? 'text-black' : 'text-gray-500'}
-                `}
-              >
-                {opt}
-              </span>
-            </label>
-          )
-        })}
+            </fieldset>
+          </div>
+        </div>
       </div>
     </div>
   )

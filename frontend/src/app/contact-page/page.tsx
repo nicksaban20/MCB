@@ -91,7 +91,8 @@ export default function ContactPage({
                 fontSize="sm"
                 _hover={{ bg: "#2B6CB0" }}
                 onClick={() => {
-                  setFormData({
+                  setFormData((prev: any) => ({
+                    ...prev,
                     firstName: "Jane",
                     lastName: "Doe",
                     email: "jane.doe@example.com",
@@ -103,7 +104,7 @@ export default function ContactPage({
                     department: "Molecular Cell Biology",
                     pi: "Dr. Smith",
                     chartstring: "1234-5678-9012",
-                  });
+                  }));
                   toast({
                     title: "Form autofilled",
                     description: "Your information was filled from the last order.",
