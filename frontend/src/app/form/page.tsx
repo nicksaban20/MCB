@@ -40,7 +40,7 @@ export default function Form() {
 
   // Global form data
 const [formData, setFormData] = useState({
-  // Step 1 & 2
+  // Step 1 & 2
   sampleTypeStep1: "",
   samples: [],
   dnaType: "",
@@ -48,13 +48,13 @@ const [formData, setFormData] = useState({
   primerDetails: "",
   plateName: "",
 
-  // ➕ Step 3 – Drop‑off
+  // ➕ Step 3 – Drop‑off
   dropOffLocation: "",
   dropOffDate: "",    // "YYYY‑MM‑DD"
   dropOffTime: "",    // "HH:mm"
   dropOffMeridiem: "",// "AM" | "PM"
 
-  // Step 4 – Contact
+  // Step 4 – Contact
   firstName: "",
   lastName: "",
   email: "",
@@ -78,6 +78,7 @@ const steps = ["Specify Order", "Sample Details", "Drop‑off", "Contact", "Subm
       alert("Please select a Sample Type first.");
       return;
     }
+    console.log('Current formData:', formData);
     if (currentStep < 5) { 
       setCurrentStep((prev) => prev + 1);
     }
@@ -225,7 +226,11 @@ const steps = ["Specify Order", "Sample Details", "Drop‑off", "Contact", "Subm
             )}
 
             {currentStep === 5 && (
-              <ReviewOrder formData={formData} goBack={() => setCurrentStep(4)} />
+              <ReviewOrder 
+                formData={formData} 
+                goBack={() => setCurrentStep(4)} 
+                user={user}
+              />
             )}
 
             {currentStep < 5 && (

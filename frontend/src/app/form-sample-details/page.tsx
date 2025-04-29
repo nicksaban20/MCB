@@ -217,6 +217,15 @@ export default function SampleDetails({ formData, setFormData }: any) {
       });
   
       setSamples(cleaned);
+      // Sync the cleaned samples to formData
+      setFormData((prev: any) => ({
+        ...prev,
+        samples: cleaned,
+        dnaQuantity,
+        primerDetails,
+        plateName: plateNameFull || plateNameLarge,
+        dnaType: dnaTypeSingle || dnaTypeFull,
+      }));
     };
   
     if (fileName.endsWith(".csv")) {
