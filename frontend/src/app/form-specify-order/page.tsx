@@ -10,7 +10,7 @@ const sampleOptions = [
   'Fragment Analysis',
   'gDNA Purification',
   'hPSC Genetic Analysis',
-  'Human Cell Line Authentication',
+  'Cell Line Authentication',
   'PCR Clean-Up Services',
   'Plasmid Prep',
 ]
@@ -18,11 +18,11 @@ const sampleOptions = [
 export default function SpecifyOrder({ formData, setFormData }: any) {
   return (
     <div className="w-full">
-      <h2 className="mb-4 text-2xl font-bold text-[#3C445C]">
+      <h2 className="figtree mb-4 text-3xl font-bold text-[#3C445C] ml-20">
         Select Sample Type(s):
       </h2>
 
-      <div className="grid grid-cols-3 gap-6 justify-center">
+      <div className="figtree grid grid-cols-3 gap-6 justify-center ml-20 mr-20 mt-10 mb-10">
         {sampleOptions.map((opt) => {
           const selected = formData.sampleTypeStep1 === opt
 

@@ -108,19 +108,27 @@ export default function Hero() {
                 <div className="absolute bottom-0 left-0 w-full h-30 bg-gradient-to-t from-white via-white/75 to-transparent z-10" />
 
                 {/* Main content */}
-                <h1
-                    className="
-                    absolute 
-                    top-1/2 left-1/4
-                    transform -translate-x-1/5 -translate-y-1/2 
-                    text-white text-10xl lg:text-6xl font-bold 
-                    z-20
-                    "
-                >
-                    Placeholder
-                </h1>
 
+                {/* left column content */}
+                <div className="ml-10 relative z-10 max-w-3xl space-y-6">
+                    <h1 className="inter text-white text-5xl md:text-8xl lg:text-8xl font-semibold leading-tight">
+                        Berkeley<br />
+                        Sequencing Lab
+                    </h1>
+                    <div className="flex items-center space-x-6">
+                        <Link
+                            href="/form"
+                            className="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3 rounded-md transition whitespace-nowrap"
+                        >
+                            Order Samples
+                        </Link>
+                        <p className="text-white text-lg md:text-xl">
+                            DNA sequencing made easier, faster, and more trustworthy; at the top
+                            public academic institution in the country
+                        </p>
+                    </div>
 
+                </div>
 
             </section>
 
