@@ -38,7 +38,7 @@ export default function LocationsSection() {
   ];
 
   return (
-    <div className="w-full bg-cover bg-center" 
+    <div className="w-full h-screen bg-center bg-no-repeat bg-contain" 
       style={{
         backgroundImage: `url('/assets/bglocation.jpg')`,
         backgroundSize: 'cover',
