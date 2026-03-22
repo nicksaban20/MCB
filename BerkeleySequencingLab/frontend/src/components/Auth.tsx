@@ -4,8 +4,8 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import { validatePassword, validateEmail } from "@/utils/security";
-import { validateOnboardingData, formatPhoneNumber } from "@/utils/onboarding";
+import { validatePassword } from "@/utils/security";
+import { validateOnboardingData } from "@/utils/onboarding";
 
 const Auth = () => {
   const [firstName, setFirstName] = useState("");
@@ -57,7 +57,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password,
         options: {
@@ -135,7 +135,7 @@ const Auth = () => {
     setSuccessMessage("");
     
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
@@ -152,7 +152,7 @@ const Auth = () => {
       }
       // If successful, the user will be redirected to Google's OAuth page
       // No need to handle success here as redirect happens automatically
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Exception during Google sign-in:", err);
       setErrors({ general: "An unexpected error occurred during Google sign-in. Please try again." });
     }
@@ -170,10 +170,12 @@ const Auth = () => {
 
   return (
     <div className="flex bg-white min-h-screen">
-      <div className="w-1/2 text-black p-8 flex items-center rounded-r-lg">
-        <p className="text-lg font-semibold">
-          TODO: put an image here
-        </p>
+      <div className="w-1/2 text-black p-8 flex items-center justify-center rounded-r-lg">
+        <img
+          src="/login_img.png"
+          alt="Berkeley Sequencing Lab"
+          className="max-w-full max-h-[80vh] object-contain"
+        />
       </div>
       <div className="w-1/2 flex flex-col justify-center p-8 max-w-md mx-auto">
         <h2 className="text-2xl text-black font-bold mb-4">Create an Account</h2>

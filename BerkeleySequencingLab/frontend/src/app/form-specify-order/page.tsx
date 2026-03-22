@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React from 'react'
@@ -61,7 +62,7 @@ export default function SpecifyOrder({ formData, setFormData }: any) {
                 value={opt}
                 checked={isSelected}
                 onChange={() =>
-                  setFormData((prev: any) => ({
+                  setFormData((prev: Record<string, unknown>) => ({
                     ...prev,
                     sampleTypeStep1: opt,
                   }))

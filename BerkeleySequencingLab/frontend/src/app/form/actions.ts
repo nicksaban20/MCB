@@ -25,7 +25,7 @@ export async function submitForm(formData: FormData) {
   const created_at = new Date().toISOString();
 
   // Insert into dna_orders and get back the ID
-  const { data: orderInsertData, error: insertError } = await supabase
+  const { error: insertError } = await supabase
     .from('dna_orders')
     .insert([
       {

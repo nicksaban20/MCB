@@ -20,6 +20,58 @@ interface ContactFormData {
   message: string;
 }
 
+interface FeedbackFormData {
+  name: string;
+  email: string;
+  issueType: string;
+  message: string;
+}
+
+export async function sendFeedbackEmail(formData: FeedbackFormData) {
+  try {
+    const { name, email, issueType, message } = formData;
+
+    if (!name || !email || !message) {
+      return { success: false, error: "Please fill out all required fields" };
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return { success: false, error: "Please enter a valid email address" };
+    }
+
+    const resend = getResendClient();
+    if (!resend) {
+      console.error('Resend API key is not configured.');
+      return { success: false, error: "Email service is not configured. Please contact the administrator." };
+    }
+
+    const { error } = await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: 'berkeleysequencinglab@gmail.com',
+      subject: `Feedback [${issueType}] from ${name}`,
+      html: `
+        <h2>New Feedback Submission</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Issue Type:</strong> ${issueType}</p>
+        <h3>Message:</h3>
+        <p>${message}</p>
+      `,
+    });
+
+    if (error) {
+      console.error('Email error:', error);
+      return { success: false, error: "Failed to send feedback. Please try again later." };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Feedback email error:', error);
+    return { success: false, error: "An unexpected error occurred. Please try again later." };
+  }
+}
+
 export async function sendContactEmail(formData: ContactFormData) {
   try {
     const { firstName, lastName, organization, email, phone, message } = formData;
@@ -51,7 +103,7 @@ export async function sendContactEmail(formData: ContactFormData) {
       };
     }
     
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to: 'berkeleysequencinglab@gmail.com',
       subject: `New contact form submission from ${firstName} ${lastName}`,

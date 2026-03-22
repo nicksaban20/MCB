@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import FileUpload from '@/components/FileUpload';
+import { useToast } from '@/context/ToastContext';
 
-type User = {
+type ProfileUser = {
   email: string | undefined;
   id: string;
 };
@@ -14,8 +15,9 @@ type User = {
 export default function ProfilePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ProfileUser | null>(null);
   const supabase = createClient();
+  const { showToast } = useToast();
 
 
   useEffect(() => {
@@ -51,16 +53,16 @@ export default function ProfilePage() {
     const { error } = await supabase.auth.updateUser({ password });
 
     if (error) {
-      alert('Error updating password: ' + error.message);
+      showToast('Error updating password: ' + error.message, 'error');
     } else {
-      alert('Password updated successfully!');
+      showToast('Password updated successfully!', 'success');
       (form.elements.namedItem('password') as HTMLInputElement).value = '';
     }
   };
 
   const handleDeleteAccount = async () => {
     if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-      alert('Please contact support to delete your account.');
+      showToast('Please contact support to delete your account.', 'info');
     }
   };
 

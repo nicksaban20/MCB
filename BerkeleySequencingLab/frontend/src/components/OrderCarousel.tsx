@@ -28,7 +28,7 @@ const OrderCarousel: React.FC = () => {
     {
       title: 'DNA QUANTIFICATION',
       description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+        'Accurate quantification of DNA samples using NanoDrop and Qubit fluorometry for optimal sequencing results',
     },
     {
       title: 'SANGER',

@@ -2,7 +2,15 @@
 
 import React, { useState } from "react";
 
-const OrdersSection = ({ orders }: { orders: any[] }) => {
+interface Order {
+    name: string;
+    date: string;
+    time: string;
+    type: string;
+    approved: boolean;
+}
+
+const OrdersSection = ({ orders }: { orders: Order[] }) => {
     const [sortOption, setSortOption] = useState("date");
 
     const sortedOrders = [...orders].sort((a, b) => {
@@ -11,7 +19,7 @@ const OrdersSection = ({ orders }: { orders: any[] }) => {
         } else if (sortOption === "approved") {
             return Number(b.approved) - Number(a.approved);
         } else {
-            const parseDate = (order: any) => new Date(`${order.date} 2024 ${order.time}`);
+            const parseDate = (order: Order) => new Date(`${order.date} 2024 ${order.time}`);
             return parseDate(b).getTime() - parseDate(a).getTime();
         }
     });

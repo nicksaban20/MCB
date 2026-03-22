@@ -1,21 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { AiOutlineDownload } from 'react-icons/ai'
 import { createClient } from '@/utils/supabase/client'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
+import Link from 'next/link'
+import { useToast } from '@/context/ToastContext'
 
-export default function ReviewOrder({ formData, goBack, user }: { 
-  formData: any; 
-  goBack: () => void;
-  user: any;
-}) {
-  const supabase = createClient();
+export default function ReviewOrder({ formData, goBack, user }: any) {
+  const { showToast } = useToast();
 
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToGuidelines, setAgreedToGuidelines] = useState(false);
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     console.log('ReviewOrder received formData:', formData);
@@ -96,7 +95,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
       // Handle both regular samples and Sanger samples
       const samplesToInsert = formData.sangerSamples || formData.samples || [];
       if (samplesToInsert.length > 0) {
-        const dnaSamplesData = samplesToInsert.map((sample: any) => ({
+        const dnaSamplesData = samplesToInsert.map((sample: Record<string, string>) => ({
           dna_order_id: dnaOrderData.id,
           sample_no: sample.no || sample.hash || '1',
           name: sample.name || sample.sampleName || `Sample ${sample.no || sample.hash || '1'}`,
@@ -113,11 +112,11 @@ export default function ReviewOrder({ formData, goBack, user }: {
       }
 
       setOrderSubmitted(true);
-      alert("Order submitted successfully!");
-      
+      showToast("Order submitted successfully!", "success");
+
     } catch (error) {
       console.error('Error submitting order:', error);
-      alert(`Error submitting order: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showToast(`Error submitting order: ${error instanceof Error ? error.message : 'Unknown error'}`, "error");
     }
   };
 
@@ -230,7 +229,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
                   </tr>
                 </thead>
                 <tbody>
-                  {samples.map((sample: any, idx: number) => (
+                  {samples.map((sample: Record<string, string>, idx: number) => (
                     <tr key={idx} className="border-b border-gray-200">
                       <td className="px-4 py-2 border-r border-gray-200">
                         {sample.no || sample.hash || idx + 1}
@@ -270,7 +269,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
               className="w-4 h-4"
             />
             <span>
-              I have read the <span className="font-bold underline">Terms & Conditions</span>.
+              I have read the <Link href="/terms" className="font-bold underline text-[#002676] hover:text-[#001a5c]">Terms & Conditions</Link>.
             </span>
           </label>
           <label className="flex items-center gap-2 text-sm">
@@ -281,7 +280,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
               className="w-4 h-4"
             />
             <span>
-              The samples follow the <span className="font-bold underline">Sample Guidelines</span>.
+              The samples follow the <Link href="/sample-guidelines" className="font-bold underline text-[#002676] hover:text-[#001a5c]">Sample Guidelines</Link>.
             </span>
           </label>
         </div>

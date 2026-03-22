@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { useToast } from '@/context/ToastContext'
 
 export default function FileUpload() {
     const [uploading, setUploading] = useState(false)
     const supabase = createClient();
-    
+    const { showToast } = useToast();
+
     const uploadFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
         try {
             setUploading(true)
@@ -33,9 +35,9 @@ export default function FileUpload() {
             if (uploadError) {
                 throw uploadError
             }
-            alert('File uploaded successfully!')
+            showToast('File uploaded successfully!', 'success')
         } catch (error) {
-            alert('Error uploading file!')
+            showToast('Error uploading file!', 'error')
             console.log(error)
         } finally {
             setUploading(false)

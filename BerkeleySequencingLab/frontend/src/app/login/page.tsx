@@ -30,8 +30,8 @@ const Login = () => {
       // If we get here, redirect happened on server side
       // But just in case, redirect client-side too
       router.push('/dashboard');
-    } catch (err: any) {
-      const errorMessage = err?.message || "An unexpected error occurred. Please try again.";
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
       setError(errorMessage);
       
       if (errorMessage === 'EMAIL_NOT_VERIFIED') {
@@ -134,13 +134,13 @@ const Login = () => {
     setSuccessMessage("");
     
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-      
+
       if (error) {
         console.error("Error signing in with Google:", error);
         if (error.message.includes('provider is not enabled')) {
@@ -151,7 +151,7 @@ const Login = () => {
       }
       // If successful, the user will be redirected to Google's OAuth page
       // No need to handle success here as redirect happens automatically
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Exception during Google sign-in:", err);
       setError("An unexpected error occurred during Google sign-in. Please try again.");
     }
@@ -160,9 +160,11 @@ const Login = () => {
   return (
     <div className="flex min-h-screen bg-white">
       <div className="w-1/2 bg-white text-black p-8 flex items-center justify-center rounded-r-lg">
-        <p className="text-xl font-semibold max-w-md">
-          TODO: put an image here
-        </p>
+        <img
+          src="/login_img.png"
+          alt="Berkeley Sequencing Lab"
+          className="max-w-full max-h-[80vh] object-contain"
+        />
       </div>
       <div className="w-1/2 flex flex-col justify-center px-16 py-12">
         <h2 className="text-3xl text-black font-bold mb-6 text-center">Sign In</h2>
@@ -234,7 +236,7 @@ const Login = () => {
         ) : (
           <form onSubmit={handleForgotPassword} className="space-y-4">
             <p className="text-gray-600 mb-4">
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we&apos;ll send you a link to reset your password.
             </p>
             <input 
               type="email" 
@@ -286,7 +288,7 @@ const Login = () => {
         </button>
         
         <p className="mt-6 text-center text-gray-600">
-          Don't have an account? <Link href="/signin" className="text-[#003262] underline not-last:font-semibold">Sign Up</Link>
+          Don&apos;t have an account? <Link href="/signin" className="text-[#003262] underline not-last:font-semibold">Sign Up</Link>
         </p>
       </div>
     </div>

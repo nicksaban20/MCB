@@ -1,16 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../navbar/page";
 import { sendContactEmail } from "../actions/email";
 import React from "react";
 import { useState, useEffect } from "react";
 
-import dynamic from "next/dynamic";
 import LocationsSection from "../drop-off/page";
 
 import OrderCarousel from '@/components/OrderCarousel';
+import NewsletterSignup from '@/components/NewsletterSignup';
 
 import { createClient } from "@/utils/supabase/client";
 
@@ -74,14 +73,14 @@ export default function Hero() {
             setIsSubmitting(false);
         }
     };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const supabase = createClient();
 
     useEffect(() => {
         const fetchUser = async () => {
-            const { data, error } = await supabase.auth.getUser();
-            console.log("Fetched user:", data?.user);
+            const { data } = await supabase.auth.getUser();
             if (data?.user) {
                 setUser(data.user);
             }
@@ -139,10 +138,10 @@ export default function Hero() {
                 <div className="w-full max-w-6xl bg-white rounded-lg p-8 mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-16 text-center w-full">
                         {[
-                            { icon: "/assets/chem.png", title: "Title 1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
-                            { icon: "/assets/search.png", title: "Title 2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
-                            { icon: "/assets/discuss.png", title: "Title 3", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
-                            { icon: "/assets/school.png", title: "Title 4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" }
+                            { icon: "/assets/chem.png", title: "Expert Analysis", description: "Professional DNA sequencing with rigorous quality control and rapid turnaround" },
+                            { icon: "/assets/search.png", title: "Advanced Technology", description: "State-of-the-art Sanger and Nanopore sequencing platforms for accurate results" },
+                            { icon: "/assets/discuss.png", title: "Dedicated Support", description: "Knowledgeable staff to help with sample preparation and results interpretation" },
+                            { icon: "/assets/school.png", title: "Academic Excellence", description: "Serving UC Berkeley researchers and the broader academic community" }
                         ].map((item, index) => (
                             <div key={index} className="space-y-2">
                                 <img src={item.icon} alt={item.title} className="w-16 h-16 mx-auto" />
@@ -227,7 +226,7 @@ export default function Hero() {
                             </div>
                             <p className="text-sm pt-4">
                                 You can always drop off samples in our mailbox in front of Barker
-                                Hall, but for fastest service (and an opportunity to say "hi" to
+                                Hall, but for fastest service (and an opportunity to say &ldquo;hi&rdquo; to
                                 the facility staff), bring your samples upstairs to 310 Barker
                                 Hall. See you soon!
                             </p>
@@ -242,7 +241,7 @@ export default function Hero() {
                         {/* success message */}
                         {submitResult?.success && (
                             <div className="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-md">
-                                Thank you for your message! We'll get back to you soon.
+                                Thank you for your message! We&apos;ll get back to you soon.
                             </div>
                         )}
 
@@ -322,6 +321,9 @@ export default function Hero() {
             {/* Social Media Footer */}
             <footer className="bg-gray-100 py-6">
                 <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
+                    <div className="mb-6 w-full flex justify-center">
+                        <NewsletterSignup />
+                    </div>
                     <p className="text-gray-700 mb-4 font-medium">Connect with us</p>
                     <div className="flex space-x-6">
                         <a

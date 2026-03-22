@@ -10,9 +10,6 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient({
     req,
     res,
-    cookieOptions: {
-      secure: process.env.NODE_ENV === 'production',
-    },
   });
   
   // check if user is authenticated
@@ -24,7 +21,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   
   // list of paths that don't require authentication
-  const publicPaths = ['/login', '/signup', '/auth-error', '/api'];
+  const publicPaths = ['/login', '/signup', '/auth-error', '/api', '/faq', '/calendar', '/search', '/links', '/results-guide', '/social', '/team', '/terms', '/sample-guidelines'];
   
   // check if the path is public
   const isPublicPath = publicPaths.some(path => 

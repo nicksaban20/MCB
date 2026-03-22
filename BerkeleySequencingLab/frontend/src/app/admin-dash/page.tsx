@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -6,7 +7,7 @@ import { FiClock, FiCheckCircle, FiActivity, FiEdit2 } from 'react-icons/fi';
 import Navbar from '../navbar/page'; // Assuming Navbar component exists and works as expected
 
 export default function AdminDashboard() {
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<any[]>([]);
   const [stats, setStats] = useState({
     completed: 0,
     in_progress: 0,
@@ -14,7 +15,7 @@ export default function AdminDashboard() {
   });
   const [totalSamples, setTotalSamples] = useState('0');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch data from the API
@@ -45,9 +46,9 @@ export default function AdminDashboard() {
         setOrders(safeData);
         
         // Calculate statistics
-        const completedOrders = safeData.filter(order => order.status?.toLowerCase() === 'completed') || [];
-        const inProgressOrders = safeData.filter(order => order.status?.toLowerCase() === 'in_progress') || [];
-        const pendingOrders = safeData.filter(order => order.status?.toLowerCase() === 'pending') || [];
+        const completedOrders = safeData.filter((order: any) => order.status?.toLowerCase() === 'completed') || [];
+        const inProgressOrders = safeData.filter((order: any) => order.status?.toLowerCase() === 'in_progress') || [];
+        const pendingOrders = safeData.filter((order: any) => order.status?.toLowerCase() === 'pending') || [];
         
         setStats({
           completed: completedOrders.length,
@@ -59,9 +60,9 @@ export default function AdminDashboard() {
         setTotalSamples(safeData.length.toString());
         
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching data:', err);
-        setError(err.message);
+        setError(err?.message || 'Unknown error');
         setLoading(false);
       }
     };
@@ -70,13 +71,13 @@ export default function AdminDashboard() {
   }, []);
 
   // Format date for display
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    const options = { 
-      month: 'short', 
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'short',
       day: 'numeric',
-      hour: 'numeric', 
+      hour: 'numeric',
       minute: '2-digit'
     };
     return date.toLocaleDateString('en-US', options)
@@ -84,10 +85,10 @@ export default function AdminDashboard() {
   };
 
   // Group actions by date for the past actions sidebar
-  const groupActionsByDate = (actions) => {
-    const grouped = {};
-    
-    actions.forEach(action => {
+  const groupActionsByDate = (actions: any[]) => {
+    const grouped: Record<string, any[]> = {};
+
+    actions.forEach((action: any) => {
       if (!action.created_at) return;
       
       const date = new Date(action.created_at);
@@ -120,7 +121,7 @@ export default function AdminDashboard() {
   };
 
   // Updated status styles to closely match the design
-  const getStatusStyle = (status) => {
+  const getStatusStyle = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'completed':
         return 'bg-green-100 text-green-700 border border-green-200';

@@ -1,14 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { JSX, useState } from "react";
 
-export default function ContactPage({
-  formData,
-  setFormData
-}: {
-  formData: any;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-}): JSX.Element {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ContactPage({ formData, setFormData }: any): JSX.Element {
   const [file, setFile] = useState<File | null>(null);
   const [organization, setOrganization] = useState("UC Affiliated");
 

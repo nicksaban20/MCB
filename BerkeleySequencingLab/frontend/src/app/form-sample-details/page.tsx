@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { useState } from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
@@ -32,7 +33,7 @@ export default function SampleDetails({ formData, setFormData }: any) {
 }
 
 // New Sanger-specific component
-function SangerSampleDetails({ formData, setFormData }: any) {
+function SangerSampleDetails({ setFormData }: any) {
   const [sangerSamples, setSangerSamples] = useState<SangerSampleRow[]>([
     { no: "1", name: "", notes: "", tubeType: "" },
     { no: "2", name: "", notes: "", tubeType: "" },
@@ -439,7 +440,7 @@ function SangerSampleDetails({ formData, setFormData }: any) {
 }
 
 // Original component for non-Sanger sample types
-function OriginalSampleDetails({ formData, setFormData }: any) {
+function OriginalSampleDetails({ setFormData }: any) {
   // 1) Our final row structure
   type SampleRow = {
     hash: string;               // The "#" column

@@ -3,16 +3,29 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/context/ToastContext';
+import { User } from '@supabase/supabase-js';
+
+interface OrgData {
+  phone?: string;
+  street_address?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
+  name?: string;
+  department?: string;
+}
 
 interface ProfileCardProps {
-  user: any;
-  orgData: any;
+  user: User | null;
+  orgData: OrgData | null;
   avatarUrl: string;
 }
 
 export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardProps) {
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   
@@ -63,6 +76,7 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
   };
 
   const handleSave = async () => {
+    if (!user) return;
     setLoading(true);
     try {
       // First, check if organization exists
@@ -107,16 +121,14 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
         throw new Error(result.error.message || 'Failed to save profile');
       }
 
-      // Show success message
-      alert('Profile saved successfully!');
-      
-      // Refresh the page to show updated data
+      showToast('Profile saved successfully!', 'success');
+
       router.refresh();
       setIsEditing(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving profile:', error);
-      const errorMessage = error?.message || error?.toString() || 'Failed to save profile. Please try again.';
-      alert(`Error: ${errorMessage}`);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save profile. Please try again.';
+      showToast(`Error: ${errorMessage}`, 'error');
     } finally {
       setLoading(false);
     }

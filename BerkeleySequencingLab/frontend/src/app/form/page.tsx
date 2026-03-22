@@ -8,6 +8,8 @@ import SampleDetails from "../form-sample-details/page";
 import ReviewOrder     from '../form-review-order/page'
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/context/ToastContext';
+import { User } from '@supabase/supabase-js';
 
 /* ================================
    MAIN PARENT COMPONENT: Form
@@ -16,9 +18,10 @@ export default function Form() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const supabase = createClient();
+  const { showToast } = useToast();
 
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -74,7 +77,7 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
   const handleNext = () => {
     // Example check for Step 1 if needed:
     if (currentStep === 1 && !formData.sampleTypeStep1) {
-      alert("Please select a Sample Type first.");
+      showToast("Please select a Sample Type first.", "warning");
       return;
     }
     console.log('Current formData:', formData);
@@ -86,7 +89,7 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
   // Go back (or cancel if on step 1)
   const handleBack = () => {
     if (currentStep === 1) {
-      alert("Canceled. Returning to homepage, perhaps.");
+      router.push('/hero');
     } else {
       setCurrentStep((prev) => Math.max(prev - 1, 1));
     }

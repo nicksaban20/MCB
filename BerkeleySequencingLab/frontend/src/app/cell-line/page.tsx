@@ -3,15 +3,16 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../navbar/page";
 import { createClient } from '@/utils/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 export default function CellLineAuthentication() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
+      const { data } = await supabase.auth.getUser();
       if (data?.user) {
         setUser(data.user);
       }
@@ -51,7 +52,7 @@ export default function CellLineAuthentication() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg text-gray-800 mb-2">What's Included</h3>
+            <h3 className="font-semibold text-lg text-gray-800 mb-2">What&apos;s Included</h3>
             <ul className="list-disc pl-6 text-gray-600 space-y-1">
               <li>Genomic DNA extraction + QC</li>
               <li>PCR amplification of 9 STR loci + Amelogenin</li>

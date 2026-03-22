@@ -29,7 +29,7 @@ interface SampleData {
 // to-do: add more validations?
 // confirmation modal
 
-export const processSequencingTxtFile = async (fileContent: string) => {
+const processSequencingTxtFile = async (fileContent: string) => {
   const supabase = createClient();
   try {
     // validation: check if file content is empty

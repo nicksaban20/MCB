@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../navbar/page';
 import { createClient } from '@/utils/supabase/client';
 import { redirect } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
 
 const BerkeleyLabWelcome = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
