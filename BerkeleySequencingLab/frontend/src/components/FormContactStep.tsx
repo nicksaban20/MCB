@@ -1,16 +1,32 @@
 "use client";
 
-import React, { JSX, useState } from "react";
+import React, { JSX, useState, useEffect } from "react";
 
-export default function ContactPage({
+const ORG_OPTIONS = ["UC Affiliated", "Off-Campus"] as const;
+
+function orgFromFormData(formData: Record<string, unknown>): string {
+  const v = formData.organization;
+  if (typeof v === "string" && ORG_OPTIONS.includes(v as (typeof ORG_OPTIONS)[number])) {
+    return v;
+  }
+  return "UC Affiliated";
+}
+
+export default function FormContactStep<T extends Record<string, unknown>>({
   formData,
-  setFormData
+  setFormData,
 }: {
-  formData: any;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  formData: T;
+  setFormData: React.Dispatch<React.SetStateAction<T>>;
 }): JSX.Element {
   const [file, setFile] = useState<File | null>(null);
-  const [organization, setOrganization] = useState("UC Affiliated");
+  const [organization, setOrganization] = useState(() => orgFromFormData(formData as Record<string, unknown>));
+
+  const orgFromParent = (formData as Record<string, unknown>).organization
+  useEffect(() => {
+    setOrganization(orgFromFormData(formData as Record<string, unknown>))
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-sync when stored organization changes
+  }, [orgFromParent])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -46,18 +62,18 @@ export default function ContactPage({
               <input
                 type="text"
                 placeholder="First Name"
-                value={formData.firstName}
+                value={String(formData.firstName ?? "")}
                 onChange={(e) =>
-                  setFormData((prev: any) => ({ ...prev, firstName: e.target.value }))
+                  setFormData((prev) => ({ ...prev, firstName: e.target.value }))
                 }
                 className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
               />
               <input
                 type="text"
                 placeholder="Last Name"
-                value={formData.lastName}
+                value={String(formData.lastName ?? "")}
                 onChange={(e) =>
-                  setFormData((prev: any) => ({ ...prev, lastName: e.target.value }))
+                  setFormData((prev) => ({ ...prev, lastName: e.target.value }))
                 }
                 className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
               />
@@ -65,18 +81,18 @@ export default function ContactPage({
             <input
               type="email"
               placeholder="Email Address"
-              value={formData.email}
+              value={String(formData.email ?? "")}
               onChange={(e) =>
-                setFormData((prev: any) => ({ ...prev, email: e.target.value }))
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
             />
             <input
               type="tel"
               placeholder="Phone Number"
-              value={formData.phone}
+              value={String(formData.phone ?? "")}
               onChange={(e) =>
-                setFormData((prev: any) => ({ ...prev, phone: e.target.value }))
+                setFormData((prev) => ({ ...prev, phone: e.target.value }))
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
             />
@@ -90,9 +106,9 @@ export default function ContactPage({
             <input
               type="text"
               placeholder="Street Address"
-              value={formData.streetAddress}
+              value={String(formData.streetAddress ?? "")}
               onChange={(e) =>
-                setFormData((prev: any) => ({ ...prev, streetAddress: e.target.value }))
+                setFormData((prev) => ({ ...prev, streetAddress: e.target.value }))
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
             />
@@ -100,27 +116,27 @@ export default function ContactPage({
               <input
                 type="text"
                 placeholder="City"
-                value={formData.city}
+                value={String(formData.city ?? "")}
                 onChange={(e) =>
-                  setFormData((prev: any) => ({ ...prev, city: e.target.value }))
+                  setFormData((prev) => ({ ...prev, city: e.target.value }))
                 }
                 className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
               />
               <input
                 type="text"
                 placeholder="State"
-                value={formData.state}
+                value={String(formData.state ?? "")}
                 onChange={(e) =>
-                  setFormData((prev: any) => ({ ...prev, state: e.target.value }))
+                  setFormData((prev) => ({ ...prev, state: e.target.value }))
                 }
                 className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
               />
               <input
                 type="text"
                 placeholder="Zip Code"
-                value={formData.zipCode}
+                value={String(formData.zipCode ?? "")}
                 onChange={(e) =>
-                  setFormData((prev: any) => ({ ...prev, zipCode: e.target.value }))
+                  setFormData((prev) => ({ ...prev, zipCode: e.target.value }))
                 }
                 className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
               />
@@ -135,7 +151,7 @@ export default function ContactPage({
             <div>
               <label className="block text-sm font-medium mb-3">Organization:</label>
               <div className="flex gap-4">
-                {["UC Affiliated", "Off-Campus"].map((option) => (
+                {ORG_OPTIONS.map((option) => (
                   <label
                     key={option}
                     className={`inline-flex items-center space-x-2 cursor-pointer border rounded-lg px-4 py-2 transition ${
@@ -151,7 +167,7 @@ export default function ContactPage({
                       checked={organization === option}
                       onChange={(e) => {
                         setOrganization(e.target.value);
-                        setFormData((prev: any) => ({ ...prev, organization: e.target.value }));
+                        setFormData((prev) => ({ ...prev, organization: e.target.value }));
                       }}
                       className="w-4 h-4"
                     />
@@ -163,27 +179,27 @@ export default function ContactPage({
             <input
               type="text"
               placeholder="Organization Name"
-              value={formData.department}
+              value={String(formData.department ?? "")}
               onChange={(e) =>
-                setFormData((prev: any) => ({ ...prev, department: e.target.value }))
+                setFormData((prev) => ({ ...prev, department: e.target.value }))
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
             />
             <input
               type="text"
               placeholder="Principal Investigator"
-              value={formData.pi}
+              value={String(formData.pi ?? "")}
               onChange={(e) =>
-                setFormData((prev: any) => ({ ...prev, pi: e.target.value }))
+                setFormData((prev) => ({ ...prev, pi: e.target.value }))
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
             />
             <input
               type="text"
               placeholder="Chartstring"
-              value={formData.chartstring}
+              value={String(formData.chartstring ?? "")}
               onChange={(e) =>
-                setFormData((prev: any) => ({ ...prev, chartstring: e.target.value }))
+                setFormData((prev) => ({ ...prev, chartstring: e.target.value }))
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002676] h-12"
             />

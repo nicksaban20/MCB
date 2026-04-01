@@ -32,7 +32,7 @@ export default function DropOff({ formData, setFormData }: any) {
             type="radio"
             checked={formData.dropOffLocation === loc}
             onChange={() =>
-              setFormData(prev => ({ ...prev, dropOffLocation: loc }))
+              setFormData((prev: Record<string, unknown>) => ({ ...prev, dropOffLocation: loc }))
             }
           />
           <span>{loc}</span>
@@ -48,7 +48,7 @@ export default function DropOff({ formData, setFormData }: any) {
             className="border p-2 rounded"
             value={formData.dropOffDate}
             onChange={e =>
-              setFormData(prev => ({ ...prev, dropOffDate: e.target.value }))
+              setFormData((prev: Record<string, unknown>) => ({ ...prev, dropOffDate: e.target.value }))
             }
           />
 
@@ -61,9 +61,9 @@ export default function DropOff({ formData, setFormData }: any) {
           className="border p-2 rounded"
           value={formData.dropOffTime}
           onChange={e => {
-            const [h, m] = e.target.value.split(':').map(Number)
+            const [h] = e.target.value.split(':').map(Number)
             const mer = h >= 12 ? 'PM' : 'AM'
-            setFormData(prev => ({
+            setFormData((prev: Record<string, unknown>) => ({
               ...prev,
               dropOffTime: e.target.value,
               dropOffMeridiem: mer

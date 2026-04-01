@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import Navbar from "../navbar/page";
+import Navbar from '@/components/Navbar'
 import OrdersSection from "./OrdersSection";
 import ProfileCard from "./ProfileCard";
 

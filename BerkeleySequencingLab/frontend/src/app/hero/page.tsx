@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "../navbar/page";
+import Navbar from '@/components/Navbar'
 import { sendContactEmail } from "../actions/email";
 import React from "react";
 import { useState, useEffect } from "react";

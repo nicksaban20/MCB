@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Navbar from "../navbar/page";
+import Navbar from '@/components/Navbar'
 import SpecifyOrder from '../form-specify-order/page'
-import ContactPage from "../contact-page/page";
+import FormContactStep from "@/components/FormContactStep";
 import SampleDetails from "../form-sample-details/page";
-import ReviewOrder     from '../form-review-order/page'
+import FormReviewOrder from '@/components/FormReviewOrder'
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
 
@@ -214,18 +214,11 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
             )}
 
             {currentStep === 3 && (
-              <ContactPage
-                formData={formData}
-                setFormData={setFormData}
-              />
+              <FormContactStep formData={formData} setFormData={setFormData} />
             )}
 
             {currentStep === 4 && (
-              <ReviewOrder 
-                formData={formData} 
-                goBack={() => setCurrentStep(3)} 
-                user={user}
-              />
+              <FormReviewOrder formData={formData} goBack={() => setCurrentStep(3)} user={user} />
             )}
 
             {currentStep < 4 && (

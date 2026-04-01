@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Navbar from "../navbar/page";
+import Navbar from '@/components/Navbar'
 import { createClient } from '@/utils/supabase/client';
 
 const ContactPage = () => {
