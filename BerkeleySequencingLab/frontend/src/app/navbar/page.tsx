@@ -4,21 +4,49 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import type { User } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
+interface NavbarProps {
+  profilePicUrl?: string;
+  user?: User | null;
+}
 
-const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) => {
-  const router = useRouter();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const supabase = createClient();
+const Navbar = ({ profilePicUrl = '', user = null }: NavbarProps) => {
+  const [role, setRole] = useState<'customer' | 'staff' | 'superadmin' | null>(null);
+  const [supabase] = useState(() => createClient());
   const pathname = usePathname();
   const isHero = pathname === '/hero';
   const isEvent = pathname.startsWith('/form');
 
   useEffect(() => {
-    setIsAdmin(user?.user_metadata.is_admin)
-  }, [user, supabase]);
+    const loadAdminState = async () => {
+      if (!user?.id) {
+        setRole(null);
+        return;
+      }
+
+      const { data: profile, error } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error loading user role:', error);
+        setRole(user?.user_metadata?.is_admin ? 'staff' : 'customer');
+        return;
+      }
+
+      setRole((profile?.role as 'customer' | 'staff' | 'superadmin' | null) ?? 'customer');
+    };
+
+    loadAdminState();
+  }, [supabase, user?.id, user?.user_metadata?.is_admin]);
+
+  const isAdmin = role === 'staff' || role === 'superadmin';
+  const isSuperadmin = role === 'superadmin';
 
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -26,11 +54,6 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
-  };
 
   // If user is signed in, show the new navbar design
   if (user) {
@@ -73,6 +96,12 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
                   </div>
                 </li>
                 <li className="hover:font-bold"><Link href="/form" className="text-[#FDB515]" style={{ color: '#FDB515' }}>ORDER FORMS</Link></li>
+                {isAdmin && (
+                  <li className="hover:font-bold"><Link href="/admin-dash" className="text-[#FDB515]" style={{ color: '#FDB515' }}>ADMIN DASHBOARD</Link></li>
+                )}
+                {isSuperadmin && (
+                  <li className="hover:font-bold"><Link href="/superadmin" className="text-[#FDB515]" style={{ color: '#FDB515' }}>SUPERADMIN</Link></li>
+                )}
                 <li className="hover:font-bold"><Link href="/dashboard" className="text-[#FDB515]" style={{ color: '#FDB515' }}>PRICING</Link></li>
                 <li className="hover:font-bold"><Link href="/dashboard" className="text-[#FDB515]" style={{ color: '#FDB515' }}>MORE</Link></li>
                 <li className="hover:font-bold"><Link href="/contact" className="text-[#FDB515]" style={{ color: '#FDB515' }}>CONTACT US</Link></li>
@@ -165,8 +194,6 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
         >
           <li className="hover:font-bold"><Link href="/hero" className="text-[#FDB515]" style={{ color: '#FDB515' }}>HOME</Link></li>
           <li className="hover:font-bold"><Link href="/form" className="text-[#FDB515]" style={{ color: '#FDB515' }}>ORDER&nbsp;FORMS</Link></li>
-          <li className="hover:font-bold"><Link href="/admin-dash" className="text-[#FDB515]" style={{ color: '#FDB515' }}>ADMIN DASHBOARD</Link></li>
-          <li className="hover:font-bold"><Link href="/plate-selection" className="text-[#FDB515]" style={{ color: '#FDB515' }}>PLATE SELECTION</Link></li>
           <li className="hover:font-bold"><Link href="/contact" className="text-[#FDB515]" style={{ color: '#FDB515' }}>FEEDBACK</Link></li>
 
           {/* Show Sign In button */}

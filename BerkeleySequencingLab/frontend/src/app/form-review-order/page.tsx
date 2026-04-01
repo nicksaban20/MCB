@@ -1,21 +1,58 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { AiOutlineDownload } from 'react-icons/ai'
-import { createClient } from '@/utils/supabase/client'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
 
-export default function ReviewOrder({ formData, goBack, user }: { 
-  formData: any; 
-  goBack: () => void;
-  user: any;
-}) {
-  const supabase = createClient();
+type ReviewSample = {
+  no?: string | number
+  hash?: string | number
+  name?: string
+  sampleName?: string
+  notes?: string
+  specialInstruction?: string
+}
 
+type ReviewFormData = {
+  firstName?: string
+  lastName?: string
+  phone?: string
+  email?: string
+  streetAddress?: string
+  city?: string
+  state?: string
+  zipCode?: string
+  chartstring?: string
+  pi?: string
+  department?: string
+  dropOffLocation?: string
+  sampleTypeStep1?: string
+  dnaType?: string
+  dnaTypeSingle?: string
+  dnaTypeFull?: string
+  dnaQuantity?: string | number
+  dnaConcentration?: string | number
+  primerDetails?: string
+  plateName?: string
+  plateNameFull?: string
+  plateNameLarge?: string
+  sangerSamples?: ReviewSample[]
+  samples?: ReviewSample[]
+}
+
+type ReviewUser = {
+  id: string
+} | null
+
+export default function ReviewOrder({ formData, goBack, user }: { 
+  formData: ReviewFormData; 
+  goBack: () => void;
+  user: ReviewUser;
+}) {
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToGuidelines, setAgreedToGuidelines] = useState(false);
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     console.log('ReviewOrder received formData:', formData);
@@ -62,8 +99,6 @@ export default function ReviewOrder({ formData, goBack, user }: {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const supabase = createClient();
-      
       if (!user) {
         throw new Error('User not authenticated');
       }
@@ -75,41 +110,26 @@ export default function ReviewOrder({ formData, goBack, user }: {
         throw new Error('Missing required fields');
       }
 
-      const { data: dnaOrderData, error: dnaOrderError } = await supabase
-        .from('dna_orders')
-        .insert([{
-          user_id: user.id,
-          sample_type: formData.sampleTypeStep1,
-          dna_type: formData.dnaType || formData.dnaTypeSingle || formData.dnaTypeFull,
-          dna_quantity: formData.dnaQuantity || formData.dnaConcentration,
-          primer_details: formData.primerDetails,
-          plate_name: formData.plateName || formData.plateNameFull || formData.plateNameLarge,
-          status: 'pending'
-        }])
-        .select()
-        .single();
-
-      if (dnaOrderError) {
-        throw new Error(`Failed to create DNA order: ${dnaOrderError.message}`);
-      }
-
-      // Handle both regular samples and Sanger samples
       const samplesToInsert = formData.sangerSamples || formData.samples || [];
-      if (samplesToInsert.length > 0) {
-        const dnaSamplesData = samplesToInsert.map((sample: any) => ({
-          dna_order_id: dnaOrderData.id,
-          sample_no: sample.no || sample.hash || '1',
-          name: sample.name || sample.sampleName || `Sample ${sample.no || sample.hash || '1'}`,
-          notes: sample.notes || sample.specialInstruction || ''
-        }));
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sampleType: formData.sampleTypeStep1,
+          dnaType: formData.dnaType || formData.dnaTypeSingle || formData.dnaTypeFull,
+          dnaQuantity: formData.dnaQuantity || formData.dnaConcentration,
+          primerDetails: formData.primerDetails,
+          plateName: formData.plateName || formData.plateNameFull || formData.plateNameLarge,
+          samples: samplesToInsert,
+        }),
+      });
 
-        const { error: dnaSamplesError } = await supabase
-          .from('dna_samples')
-          .insert(dnaSamplesData);
+      const responseBody = await response.json();
 
-        if (dnaSamplesError) {
-          throw new Error(`Failed to create DNA samples: ${dnaSamplesError.message}`);
-        }
+      if (!response.ok) {
+        throw new Error(responseBody?.details || responseBody?.error || 'Failed to create DNA order');
       }
 
       setOrderSubmitted(true);
@@ -138,7 +158,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
   // Get samples (either Sanger or regular)
-  const samples = formData.sangerSamples || formData.samples || [];
+  const samples: ReviewSample[] = formData.sangerSamples || formData.samples || [];
 
   return (
     <div className="max-w-5xl mx-auto p-8">
@@ -230,7 +250,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
                   </tr>
                 </thead>
                 <tbody>
-                  {samples.map((sample: any, idx: number) => (
+                  {samples.map((sample: ReviewSample, idx: number) => (
                     <tr key={idx} className="border-b border-gray-200">
                       <td className="px-4 py-2 border-r border-gray-200">
                         {sample.no || sample.hash || idx + 1}

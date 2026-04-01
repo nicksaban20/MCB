@@ -19,7 +19,7 @@ const Dashboard = async () => {
         .eq('user_id', user.id)
         .single();
 
-    const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "https://via.placeholder.com/50";
+    const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
 
     const ordersData = [
         {

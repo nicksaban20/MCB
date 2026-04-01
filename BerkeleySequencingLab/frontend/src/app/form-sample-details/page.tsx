@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import * as XLSX from 'xlsx'
 
@@ -33,23 +33,34 @@ export default function SampleDetails({ formData, setFormData }: any) {
 
 // New Sanger-specific component
 function SangerSampleDetails({ formData, setFormData }: any) {
-  const [sangerSamples, setSangerSamples] = useState<SangerSampleRow[]>([
-    { no: "1", name: "", notes: "", tubeType: "" },
-    { no: "2", name: "", notes: "", tubeType: "" },
-    { no: "3", name: "", notes: "", tubeType: "" },
-  ]);
+  const [sangerSamples, setSangerSamples] = useState<SangerSampleRow[]>(
+    formData.sangerSamples?.length
+      ? formData.sangerSamples
+      : [
+          { no: "1", name: "", notes: "", tubeType: "" },
+          { no: "2", name: "", notes: "", tubeType: "" },
+          { no: "3", name: "", notes: "", tubeType: "" },
+        ]
+  );
   
   const [dnaDataFile, setDnaDataFile] = useState<File | null>(null);
-  const [dnaType, setDnaType] = useState("");
-  const [dnaTypeSingle, setDnaTypeSingle] = useState("");
-  const [dnaConcentration, setDnaConcentration] = useState("");
-  const [solvent, setSolvent] = useState("");
-  const [primerIncluded, setPrimerIncluded] = useState("");
-  const [primerDetails, setPrimerDetails] = useState("");
-  const [plateNameFull, setPlateNameFull] = useState("");
-  const [dnaTypeFull, setDnaTypeFull] = useState("");
-  const [plateNameLarge, setPlateNameLarge] = useState("");
-  const [highGCContent, setHighGCContent] = useState("");
+  const [dnaType, setDnaType] = useState(formData.dnaType || "");
+  const [dnaTypeSingle, setDnaTypeSingle] = useState(formData.dnaTypeSingle || "");
+  const [dnaConcentration, setDnaConcentration] = useState(formData.dnaConcentration || formData.dnaQuantity || "");
+  const [solvent, setSolvent] = useState(formData.solvent || "");
+  const [primerIncluded, setPrimerIncluded] = useState(formData.primerIncluded || "");
+  const [primerDetails, setPrimerDetails] = useState(formData.primerDetails || "");
+  const [plateNameFull, setPlateNameFull] = useState(formData.plateNameFull || "");
+  const [dnaTypeFull, setDnaTypeFull] = useState(formData.dnaTypeFull || "");
+  const [plateNameLarge, setPlateNameLarge] = useState(formData.plateNameLarge || "");
+  const [highGCContent, setHighGCContent] = useState(formData.highGCContent || "");
+
+  const updateParent = (updates: Record<string, string | SangerSampleRow[]>) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      ...updates,
+    }));
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -84,12 +95,13 @@ function SangerSampleDetails({ formData, setFormData }: any) {
     });
   };
 
-  const syncToFormData = () => {
+  useEffect(() => {
     setFormData((prev: any) => ({
       ...prev,
       sangerSamples,
       dnaType,
       dnaTypeSingle,
+      dnaQuantity: dnaConcentration,
       dnaConcentration,
       solvent,
       primerIncluded,
@@ -99,10 +111,23 @@ function SangerSampleDetails({ formData, setFormData }: any) {
       plateNameLarge,
       highGCContent,
     }));
-  };
+  }, [
+    dnaConcentration,
+    dnaType,
+    dnaTypeFull,
+    dnaTypeSingle,
+    highGCContent,
+    plateNameFull,
+    plateNameLarge,
+    primerDetails,
+    primerIncluded,
+    sangerSamples,
+    setFormData,
+    solvent,
+  ]);
 
   return (
-    <div className="max-w-5xl mx-auto p-8" onBlur={syncToFormData}>
+    <div className="max-w-5xl mx-auto p-8">
       {/* Upload a DNA Data Table */}
       <section className="mb-8 flex items-start gap-8">
         <div className="flex-1">
@@ -165,7 +190,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                   name="dnaType"
                   value={type}
                   checked={dnaType === type}
-                  onChange={(e) => setDnaType(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDnaType(value);
+                    updateParent({ dnaType: value });
+                  }}
                   className="w-4 h-4"
                 />
                 <span>{type}</span>
@@ -267,7 +296,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                   name="highGCContent"
                   value={option}
                   checked={highGCContent === option}
-                  onChange={(e) => setHighGCContent(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setHighGCContent(value);
+                    updateParent({ highGCContent: value });
+                  }}
                   className="w-4 h-4"
                 />
                 <span>{option}</span>
@@ -293,7 +326,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                     name="dnaTypeSingle"
                     value={type}
                     checked={dnaTypeSingle === type}
-                    onChange={(e) => setDnaTypeSingle(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDnaTypeSingle(value);
+                      updateParent({ dnaTypeSingle: value, dnaType: value });
+                    }}
                     className="w-4 h-4"
                   />
                   <span>{type}</span>
@@ -310,7 +347,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
               type="text"
               placeholder="(ng/µL)"
               value={dnaConcentration}
-              onChange={(e) => setDnaConcentration(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setDnaConcentration(value);
+                updateParent({ dnaConcentration: value, dnaQuantity: value });
+              }}
               className="w-48 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#002676]"
             />
           </div>
@@ -324,13 +365,17 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                   className="inline-flex items-center space-x-2 cursor-pointer border border-gray-300 rounded-lg px-4 py-2 hover:border-gray-400 transition"
                 >
                   <input
-                    type="radio"
-                    name="solvent"
-                    value={sol}
-                    checked={solvent === sol}
-                    onChange={(e) => setSolvent(e.target.value)}
-                    className="w-4 h-4"
-                  />
+                  type="radio"
+                  name="solvent"
+                  value={sol}
+                  checked={solvent === sol}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSolvent(value);
+                    updateParent({ solvent: value });
+                  }}
+                  className="w-4 h-4"
+                />
                   <span>{sol}</span>
                 </label>
               ))}
@@ -348,7 +393,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                   name="primerIncluded"
                   value="yes"
                   checked={primerIncluded === "yes"}
-                  onChange={(e) => setPrimerIncluded(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPrimerIncluded(value);
+                    updateParent({ primerIncluded: value });
+                  }}
                   className="w-4 h-4"
                 />
                 <span>Yes</span>
@@ -359,7 +408,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                   name="primerIncluded"
                   value="no"
                   checked={primerIncluded === "no"}
-                  onChange={(e) => setPrimerIncluded(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPrimerIncluded(value);
+                    updateParent({ primerIncluded: value });
+                  }}
                   className="w-4 h-4"
                 />
                 <span>No, I would like the lab to include it for me.</span>
@@ -375,7 +428,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
               type="text"
               placeholder="Type..."
               value={primerDetails}
-              onChange={(e) => setPrimerDetails(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPrimerDetails(value);
+                updateParent({ primerDetails: value });
+              }}
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#002676]"
             />
           </div>
@@ -391,7 +448,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
               type="text"
               placeholder="Type..."
               value={plateNameFull}
-              onChange={(e) => setPlateNameFull(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPlateNameFull(value);
+                updateParent({ plateNameFull: value, plateName: value });
+              }}
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#002676]"
             />
           </div>
@@ -409,7 +470,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
                     name="dnaTypeFull"
                     value={type}
                     checked={dnaTypeFull === type}
-                    onChange={(e) => setDnaTypeFull(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDnaTypeFull(value);
+                      updateParent({ dnaTypeFull: value, dnaType: value });
+                    }}
                     className="w-4 h-4"
                   />
                   <span>{type}</span>
@@ -428,7 +493,11 @@ function SangerSampleDetails({ formData, setFormData }: any) {
               type="text"
               placeholder="Type..."
               value={plateNameLarge}
-              onChange={(e) => setPlateNameLarge(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPlateNameLarge(value);
+                updateParent({ plateNameLarge: value, plateName: value });
+              }}
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#002676]"
             />
           </div>
@@ -450,25 +519,36 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
   };
 
   // 2) Local state
-  const [samples, setSamples] = useState<SampleRow[]>([
-    {
-      hash: "",
-      sampleName: "",
-      plasmidProtocol: "",
-      pcrProtocol: "",
-      specialInstruction: "",
-    },
-  ]);
+  const [samples, setSamples] = useState<SampleRow[]>(
+    formData.samples?.length
+      ? formData.samples
+      : [
+          {
+            hash: "",
+            sampleName: "",
+            plasmidProtocol: "",
+            pcrProtocol: "",
+            specialInstruction: "",
+          },
+        ]
+  );
 
   const [dnaDataFile, setDnaDataFile] = useState<File | null>(null);
-  const [sampleType, setSampleType] = useState("");
-  const [dnaTypeSingle, setDnaTypeSingle] = useState("");
-  const [dnaQuantity, setDnaQuantity] = useState("");
-  const [primerDetails, setPrimerDetails] = useState("");
-  const [plateNameFull, setPlateNameFull] = useState("");
-  const [dnaTypeFull, setDnaTypeFull] = useState("");
-  const [plateNameLarge, setPlateNameLarge] = useState("");
+  const [sampleType, setSampleType] = useState(formData.sampleType || "");
+  const [dnaTypeSingle, setDnaTypeSingle] = useState(formData.dnaTypeSingle || formData.dnaType || "");
+  const [dnaQuantity, setDnaQuantity] = useState(formData.dnaQuantity || "");
+  const [primerDetails, setPrimerDetails] = useState(formData.primerDetails || "");
+  const [plateNameFull, setPlateNameFull] = useState(formData.plateNameFull || formData.plateName || "");
+  const [dnaTypeFull, setDnaTypeFull] = useState(formData.dnaTypeFull || "");
+  const [plateNameLarge, setPlateNameLarge] = useState(formData.plateNameLarge || "");
   const [manualSamplesNotes, setManualSamplesNotes] = useState("");
+
+  const updateParent = (updates: Record<string, string | SampleRow[]>) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      ...updates,
+    }));
+  };
 
   // 3) Headers we need
   const requiredHeaders = [
@@ -700,20 +780,35 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
     setSamples(updated);
   };
 
-  // 7) sync to formData
-  const syncToFormData = () => {
+  // 7) sync to formData continuously so review/submit always has the latest values
+  useEffect(() => {
     setFormData((prev: any) => ({
       ...prev,
       samples,
+      sampleType,
+      dnaTypeSingle,
       dnaQuantity,
       primerDetails,
+      plateNameFull,
+      dnaTypeFull,
+      plateNameLarge,
       plateName: plateNameFull || plateNameLarge,
       dnaType: dnaTypeSingle || dnaTypeFull,
     }));
-  };
+  }, [
+    dnaQuantity,
+    dnaTypeFull,
+    dnaTypeSingle,
+    plateNameFull,
+    plateNameLarge,
+    primerDetails,
+    sampleType,
+    samples,
+    setFormData,
+  ]);
 
   return (
-    <div className="max-w-5xl mx-auto p-8" onBlur={syncToFormData}>
+    <div className="max-w-5xl mx-auto p-8">
       {/* === Upload a DNA Data Table === */}
       <section className="flex flex-col lg:flex-row items-start gap-8">
         <div className="w-full lg:w-1/2">
@@ -766,13 +861,17 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
               key={type}
               className="inline-flex items-center space-x-2 cursor-pointer border border-gray-300 px-3 py-2 rounded"
             >
-              <input
-                type="radio"
-                name="sampleType"
-                value={type}
-                checked={sampleType === type}
-                onChange={(e) => setSampleType(e.target.value)}
-              />
+                <input
+                  type="radio"
+                  name="sampleType"
+                  value={type}
+                  checked={sampleType === type}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSampleType(value);
+                    updateParent({ sampleType: value });
+                  }}
+                />
               <span>{type}</span>
             </label>
           ))}
@@ -880,7 +979,11 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
                   name="dnaTypeSingle"
                   value={type}
                   checked={dnaTypeSingle === type}
-                  onChange={(e) => setDnaTypeSingle(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDnaTypeSingle(value);
+                    updateParent({ dnaTypeSingle: value, dnaType: value });
+                  }}
                 />
                 <span>{type}</span>
               </label>
@@ -897,7 +1000,11 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
             placeholder="(ng/µL)"
             name="dnaQuantity"
             value={dnaQuantity}
-            onChange={(e) => setDnaQuantity(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDnaQuantity(value);
+              updateParent({ dnaQuantity: value });
+            }}
             className="w-32 p-2 border border-gray-300 rounded"
           />
         </div>
@@ -912,7 +1019,11 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
           placeholder="Type..."
           value={primerDetails}
           name="primerDetails"
-          onChange={(e) => setPrimerDetails(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setPrimerDetails(value);
+            updateParent({ primerDetails: value });
+          }}
           className="w-full p-2 border border-gray-300 rounded mb-6"
         />
 
@@ -924,7 +1035,11 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
           placeholder="Type..."
           name="plateNameFull"
           value={plateNameFull}
-          onChange={(e) => setPlateNameFull(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setPlateNameFull(value);
+            updateParent({ plateNameFull: value, plateName: value });
+          }}
           className="w-full p-2 border border-gray-300 rounded mb-4"
         />
         <div className="mb-4 flex flex-col lg:flex-row lg:items-center gap-4">
@@ -940,7 +1055,11 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
                   name="dnaTypeFull"
                   value={type}
                   checked={dnaTypeFull === type}
-                  onChange={(e) => setDnaTypeFull(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDnaTypeFull(value);
+                    updateParent({ dnaTypeFull: value, dnaType: value });
+                  }}
                 />
                 <span>{type}</span>
               </label>
@@ -956,7 +1075,11 @@ function OriginalSampleDetails({ formData, setFormData }: any) {
           placeholder="Type..."
           value={plateNameLarge}
           
-          onChange={(e) => setPlateNameLarge(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setPlateNameLarge(value);
+            updateParent({ plateNameLarge: value, plateName: value });
+          }}
           className="w-full p-2 border border-gray-300 rounded"
         />
       </section>
