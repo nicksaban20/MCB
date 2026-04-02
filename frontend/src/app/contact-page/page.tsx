@@ -17,6 +17,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FiUpload } from "react-icons/fi";
+import { fetchUserContactInfo } from '../form/actions';
 
 export default function ContactPage({
   formData,
@@ -28,6 +29,20 @@ export default function ContactPage({
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const toast = useToast();
+
+  const handleAutofill = async () => {
+    try {
+      const contactInfo = await fetchUserContactInfo();
+      if (!contactInfo) {
+        alert('No saved contact information found.');
+        return;
+      }
+      setFormData((prev: any) => ({ ...prev, ...contactInfo }));
+    } catch (error) {
+      console.error('Error fetching contact info:', error);
+      alert('Failed to fetch contact information.');
+    }
+  };
 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,31 +105,9 @@ export default function ContactPage({
                 fontWeight="semibold"
                 fontSize="sm"
                 _hover={{ bg: "#2B6CB0" }}
-                onClick={() => {
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    firstName: "Jane",
-                    lastName: "Doe",
-                    email: "jane.doe@example.com",
-                    phone: "123-456-7890",
-                    streetAddress: "123 Campus Drive",
-                    city: "Berkeley",
-                    state: "CA",
-                    zipCode: "94720",
-                    department: "Molecular Cell Biology",
-                    pi: "Dr. Smith",
-                    chartstring: "1234-5678-9012",
-                  }));
-                  toast({
-                    title: "Form autofilled",
-                    description: "Your information was filled from the last order.",
-                    status: "info",
-                    duration: 3000,
-                    isClosable: true,
-                  });
-                }}
+                onClick={handleAutofill}
               >
-                Auto fill from last order (mock)
+                Autofill Saved Contact Info
               </Button>
               <Stack spacing={6}>
                 <Flex gap={6}>

@@ -116,3 +116,49 @@ export async function submitForm(formData: FormData) {
   // Return success with the order ID
   return { success: true, orderId };
 }
+
+export async function fetchUserContactInfo() {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    throw new Error('Not authenticated');
+  }
+
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select(`
+      first_name,
+      last_name,
+      email,
+      phone,
+      address,
+      city,
+      state,
+      zip_code,
+      department,
+      pi,
+      chartstring
+    `)
+    .eq('id', user.id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching profile:', error);
+    return null;
+  }
+
+  return {
+    firstName: data?.first_name || '',
+    lastName: data?.last_name || '',
+    email: data?.email || '',
+    phone: data?.phone || '',
+    streetAddress: data?.address || '',
+    city: data?.city || '',
+    state: data?.state || '',
+    zipCode: data?.zip_code || '',
+    department: data?.department || '',
+    pi: data?.pi || '',
+    chartstring: data?.chartstring || ''
+  };
+}
