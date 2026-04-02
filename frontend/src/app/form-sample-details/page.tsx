@@ -12,14 +12,6 @@ export type SampleRow = {
 }
 
 export default function SampleDetails({ formData, setFormData }: any) {
-  // 1) Our final row structure
-  type SampleRow = {
-    hash: string;               // The "#" column
-    sampleName: string;         // "Sample Names"
-    plasmidProtocol: string;    // "Plasmid"
-    pcrProtocol: string;        // "PCR Products"
-    specialInstruction: string; // "Special Instruction"
-  };
 
   // 2) Local state
   const [samples, setSamples] = useState<SampleRow[]>([
@@ -41,6 +33,19 @@ export default function SampleDetails({ formData, setFormData }: any) {
   const [dnaTypeFull, setDnaTypeFull] = useState("");
   const [plateNameLarge, setPlateNameLarge] = useState("");
   const [manualSamplesNotes, setManualSamplesNotes] = useState("");
+
+  useEffect(() => {
+    if (formData.samples?.length) {
+      const restored: SampleRow[] = formData.samples.map((s: any) => ({
+        hash:               s.sampleNo,
+        sampleName:         s.name,
+        plasmidProtocol:    "",
+        pcrProtocol:        "",
+        specialInstruction: s.notes,
+      }))
+      setSamples(restored)
+    }
+  }, [])
 
   // 3) Headers we need
   const requiredHeaders = [
@@ -217,15 +222,7 @@ export default function SampleDetails({ formData, setFormData }: any) {
       });
   
       setSamples(cleaned);
-      // Sync the cleaned samples to formData
-      setFormData((prev: any) => ({
-        ...prev,
-        samples: cleaned,
-        dnaQuantity,
-        primerDetails,
-        plateName: plateNameFull || plateNameLarge,
-        dnaType: dnaTypeSingle || dnaTypeFull,
-      }));
+      setFormData((prev: any) => ({ ...prev, samples: cleaned }))
     };
   
     if (fileName.endsWith(".csv")) {
@@ -250,42 +247,60 @@ export default function SampleDetails({ formData, setFormData }: any) {
 
   // 6) addSampleRow + handleTableChange
   const addSampleRow = () => {
-    setSamples((prev) => [
+    setSamples(prev => [
       ...prev,
-      {
-        hash: "",
-        sampleName: "",
-        plasmidProtocol: "",
-        pcrProtocol: "",
-        specialInstruction: "",
-      },
-    ]);
-  };
+      { hash: "", sampleName: "", plasmidProtocol: "", pcrProtocol: "", specialInstruction: "" }
+    ])
+    syncToFormData()
+  }
 
   const handleTableChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
-    field: "hash" | "sampleName" | "plasmidProtocol" | "pcrProtocol" | "specialInstruction"
+    field: keyof SampleRow
   ) => {
-    const updated = [...samples];
-    updated[index][field] = e.target.value;
-    setSamples(updated);
-  };
+    setSamples(prev => {
+      const next = [...prev]
+      next[index] = { ...next[index], [field]: e.target.value }
+      return next
+    })
+    syncToFormData()
+  }
 
-  // 7) sync to formData
+  // 7) sync to formData — maps to the shape ReviewOrder expects
   const syncToFormData = () => {
+    const mapped = samples.map((s, i) => ({
+      sampleNo: s.hash || String(i + 1),
+      name:     s.sampleName,
+      notes:    s.specialInstruction
+    }))
+
     setFormData((prev: any) => ({
       ...prev,
-      samples,
+      samples:      mapped,
       dnaQuantity,
       primerDetails,
-      plateName: plateNameFull || plateNameLarge,
-      dnaType: dnaTypeSingle || dnaTypeFull,
-    }));
-  };
+      plateName:    plateNameFull || plateNameLarge,
+      dnaType:      dnaTypeSingle || dnaTypeFull,
+    }))
+  }
+
+  useEffect(() => {
+    return () => {
+      syncToFormData();
+    };
+  }, [
+    samples,
+    dnaQuantity,
+    primerDetails,
+    plateNameFull,
+    plateNameLarge,
+    dnaTypeSingle,
+    dnaTypeFull,
+  ]);
 
   return (
-    <div className="max-w-5xl mx-auto p-8" onBlur={syncToFormData}>
+    <div className="max-w-5xl mx-auto p-8">
       {/* === Upload a DNA Data Table === */}
       <section className="flex flex-col lg:flex-row items-start gap-8">
         <div className="w-full lg:w-1/2">

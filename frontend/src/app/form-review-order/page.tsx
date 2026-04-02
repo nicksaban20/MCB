@@ -317,7 +317,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
             </p>
             <p>
               <span className="font-semibold">Date</span>:{" "}
-              {formData.date || "MM/DD/YYYY"}
+              {new Date().toLocaleDateString('en-US')}
             </p>
           </div>
         </div>
