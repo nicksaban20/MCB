@@ -22,22 +22,19 @@ const Dashboard = async () => {
     const lastName = user.user_metadata?.lastName || user.user_metadata?.name?.split(' ').slice(1).join(' ') || '';
     const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "https://via.placeholder.com/50";
 
-    const ordersData = [
-        {
-            name: "Sequence A",
-            date: "March 15",
-            time: "12:55 PM",
-            type: "Nanospore",
-            approved: false,
-        },
-        {
-            name: "Sequence B",
-            date: "March 16",
-            time: "12:45 PM",
-            type: "Sanger",
-            approved: true,
-        },
-    ];
+    const { data: rawOrders } = await supabase
+        .from('dna_orders')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+    const ordersData = (rawOrders || []).map(order => ({
+        name: order.plate_name || order.sample_type || 'Untitled Order',
+        date: new Date(order.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+        time: new Date(order.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+        type: order.sample_type || 'Unknown',
+        approved: order.status === 'completed',
+    }));
 
     return (
         <div className="bg-white text-black">

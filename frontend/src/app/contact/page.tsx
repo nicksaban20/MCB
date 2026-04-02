@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from "../navbar/page";
+import { sendContactEmail } from "../actions/email";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -20,12 +21,27 @@ const ContactPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
 
-    // HANDLE SUBMIT/EMAIL LOGIC HERE
-    setSubmitted(true);
+    const nameParts = formData.name.trim().split(/\s+/);
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    const result = await sendContactEmail({
+      firstName,
+      lastName,
+      organization: '',
+      email: formData.email,
+      phone: '',
+      message: `[${formData.issueType}] ${formData.message}`,
+    });
+
+    if (result.success) {
+      setSubmitted(true);
+    } else {
+      alert(result.error || 'Failed to send message. Please try again.');
+    }
   };
 
   return (

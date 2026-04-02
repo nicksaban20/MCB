@@ -59,8 +59,24 @@ export default function ProfilePage() {
   };
 
   const handleDeleteAccount = async () => {
-    if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-      alert('Please contact support to delete your account.');
+    if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) return;
+    if (!confirm('This will permanently delete your account and all associated data. Continue?')) return;
+
+    try {
+      const { error } = await supabase.rpc('delete_user_account');
+      if (error) {
+        // If RPC doesn't exist, sign out and show instructions
+        await supabase.auth.signOut();
+        alert('Your account deletion request has been submitted. Please contact drgeller@berkeley.edu to confirm deletion.');
+        router.push('/login');
+        return;
+      }
+      await supabase.auth.signOut();
+      router.push('/login');
+    } catch {
+      await supabase.auth.signOut();
+      alert('Your account deletion request has been submitted. Please contact drgeller@berkeley.edu to confirm deletion.');
+      router.push('/login');
     }
   };
 

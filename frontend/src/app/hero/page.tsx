@@ -139,10 +139,10 @@ export default function Hero() {
                 <div className="w-full max-w-6xl bg-white rounded-lg p-8 mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-16 text-center w-full">
                         {[
-                            { icon: "/assets/chem.png", title: "Title 1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
-                            { icon: "/assets/search.png", title: "Title 2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
-                            { icon: "/assets/discuss.png", title: "Title 3", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
-                            { icon: "/assets/school.png", title: "Title 4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" }
+                            { icon: "/assets/chem.png", title: "Sanger Sequencing", description: "Industry-standard sequencing for plasmids, PCR products, and other DNA templates with fast turnaround." },
+                            { icon: "/assets/search.png", title: "Fragment Analysis", description: "Precise sizing and quantification of DNA fragments for genotyping, microsatellite analysis, and more." },
+                            { icon: "/assets/discuss.png", title: "Sample Preparation", description: "Expert guidance on sample requirements, primer design, and template preparation for optimal results." },
+                            { icon: "/assets/school.png", title: "Data Analysis", description: "Comprehensive sequencing results with chromatograms, quality scores, and downloadable data files." }
                         ].map((item, index) => (
                             <div key={index} className="space-y-2">
                                 <img src={item.icon} alt={item.title} className="w-16 h-16 mx-auto" />

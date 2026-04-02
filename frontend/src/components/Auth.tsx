@@ -50,10 +50,13 @@ const Auth = () => {
 
   return (
     <div className="flex bg-white min-h-screen">
-      <div className="w-1/2 text-black p-8 flex items-center rounded-r-lg">
-        <p className="text-lg font-semibold">
-          TODO: put an image here
-        </p>
+      <div className="w-1/2 flex items-center justify-center rounded-r-lg bg-gradient-to-br from-[#003262] to-[#3B7EA1]">
+        <div className="text-center text-white px-8">
+          <p className="text-5xl mb-4">&#x1F9EC;</p>
+          <h1 className="text-3xl font-bold">Berkeley</h1>
+          <h1 className="text-3xl font-bold">Sequencing Lab</h1>
+          <p className="mt-3 text-blue-200 text-sm">UC Berkeley DNA Sequencing Facility</p>
+        </div>
       </div>
       <div className="w-1/2 flex flex-col justify-center p-8">
         <h2 className="text-2xl text-black font-bold mb-4">Create an Account</h2>

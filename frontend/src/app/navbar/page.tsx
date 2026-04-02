@@ -69,21 +69,20 @@ const Navbar = ({ profilePicUrl, user }: { profilePicUrl: string; user: any }) =
         >
           <li className="hover:font-bold"><Link href="/dashboard">HOME</Link></li>
           <li className="hover:font-bold"><Link href="/form">ORDER&nbsp;FORMS</Link></li>
-          <li className="hover:font-bold"><Link href="/admin-dash">ADMIN DASHBOARD</Link></li>
-          <li className="hover:font-bold"><Link href="/plate-selection">PLATE SELECTION</Link></li>
           <li className="hover:font-bold"><Link href="/contact">FEEDBACK</Link></li>
+          <li className="hover:font-bold"><Link href="/search">SEARCH</Link></li>
+          <li className="hover:font-bold"><Link href="/support">SUPPORT</Link></li>
 
-
-
-
-          {/* Show Admin Dashboard link if user is an admin 
           {isAdmin && (
             <li className="hover:font-bold cursor-pointer">
               <Link href="/admin-dash">ADMIN DASHBOARD</Link>
+            </li>
+          )}
+          {isAdmin && (
+            <li className="hover:font-bold cursor-pointer">
               <Link href="/plate-selection">PLATE SELECTION</Link>
             </li>
           )}
-          */}
 
           {/* Show Sign Out or Sign In depending on user */}
           {user ? (

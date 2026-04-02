@@ -386,7 +386,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
             />
             <span>
               I have read the{" "}
-              <a className="underline" href="#!">
+              <a className="underline" href="/terms" target="_blank" rel="noopener noreferrer">
                 Terms &amp; Conditions
               </a>
               .
@@ -400,7 +400,7 @@ export default function ReviewOrder({ formData, goBack, user }: {
             />
             <span>
               The samples follow the{" "}
-              <a className="underline" href="#!">
+              <a className="underline" href="/sample-guidelines" target="_blank" rel="noopener noreferrer">
                 Sample Guidelines
               </a>
               .

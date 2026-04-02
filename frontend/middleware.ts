@@ -18,19 +18,30 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   
   // list of paths that don't require authentication
-  const publicPaths = ['/login', '/signup', '/auth-error', '/api'];
-  
+  const publicPaths = ['/login', '/signup', '/auth-error', '/api', '/faq', '/terms', '/sample-guidelines', '/links', '/results-guide'];
+
   // check if the path is public
-  const isPublicPath = publicPaths.some(path => 
+  const isPublicPath = publicPaths.some(path =>
     pathname.startsWith(path) || pathname === '/'
   );
-  
+
   // if user is not authenticated and trying to access a protected route,
   // redirect to the 403 page
   if (!session && !isPublicPath) {
     return NextResponse.redirect(new URL('/unauthorized', req.url));
   }
-  
+
+  // admin route protection
+  const adminPaths = ['/admin-dash', '/plate-selection'];
+  const isAdminPath = adminPaths.some(path => pathname.startsWith(path));
+
+  if (isAdminPath && session) {
+    const isAdmin = session.user?.user_metadata?.is_admin === true;
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
+  }
+
   return res;
 }
 
