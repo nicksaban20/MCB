@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Navbar from '../navbar/page';
+import Navbar from '../navbar/Navbar';
 import { createClient } from '@/utils/supabase/client';
 import { redirect } from 'next/navigation';
 

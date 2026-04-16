@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "../navbar/page";
+import Navbar from "../navbar/Navbar";
 import { sendContactEmail } from "../actions/email";
 import React from "react";
 import { useState, useEffect } from "react";
@@ -99,7 +99,7 @@ export default function Hero() {
 
             {/* Hero Section */}
             <section
-                className="relative h-[115vh] w-full px-10 py-20 flex flex-col lg:flex-row justify-between items-start lg:items-center bg-cover bg-top"
+                className="relative flex min-h-[80vh] w-full flex-col justify-end bg-cover bg-top px-4 py-16 sm:px-6 lg:min-h-[90vh] lg:flex-row lg:items-center lg:px-10 lg:py-20"
                 style={{
                     backgroundImage: 'url("/assets/hero.png")',
                 }}
@@ -110,19 +110,19 @@ export default function Hero() {
                 {/* Main content */}
 
                 {/* left column content */}
-                <div className="ml-10 relative z-10 max-w-3xl space-y-6">
-                    <h1 className="inter text-[#FDB515] text-5xl md:text-8xl lg:text-8xl font-semibold leading-tight">
+                <div className="relative z-10 max-w-3xl space-y-6 lg:ml-10">
+                    <h1 className="inter text-[#FDB515] text-4xl font-semibold leading-tight sm:text-6xl lg:text-8xl">
                         Berkeley<br />
                         Sequencing Lab
                     </h1>
-                    <div className="flex items-center space-x-6">
+                    <div className="flex flex-col gap-4 sm:items-start lg:flex-row lg:items-center lg:gap-6">
                         <Link
                             href="/form"
                             className="inline-block bg-[#FDB515] hover:bg-[#e6a013] text-[#003262] font-semibold px-8 py-3 rounded-md transition whitespace-nowrap"
                         >
                             Order Samples
                         </Link>
-                        <p className="text-white text-lg md:text-xl">
+                        <p className="max-w-2xl text-white text-base sm:text-lg md:text-xl">
                             DNA sequencing made easier, faster, and more trustworthy; at the top
                             public academic institution in the country
                         </p>
@@ -135,9 +135,9 @@ export default function Hero() {
             <OrderCarousel />
 
             {/* Icons */}
-            <section className="flex justify-center bg-white items-center w-full">
-                <div className="w-full max-w-6xl bg-white rounded-lg p-8 mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-16 text-center w-full">
+            <section className="flex w-full items-center justify-center bg-white">
+                <div className="mx-auto w-full max-w-6xl rounded-lg bg-white px-4 py-10 sm:px-6 lg:px-8">
+                    <div className="grid w-full grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4">
                         {[
                             { icon: "/assets/chem.png", title: "Title 1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
                             { icon: "/assets/search.png", title: "Title 2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
@@ -156,7 +156,7 @@ export default function Hero() {
 
 
             {/* Learn More Section */}
-            <section className="bg-white px-10 py-20">
+            <section className="bg-white px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
                 <div className="max-w-7xl mx-auto">
                     <h2 className="text-2xl text-black font-semibold mb-8">Learn More</h2>
                     <div className="grid  text-black grid-cols-1 md:grid-cols-2 gap-8">
@@ -188,8 +188,8 @@ export default function Hero() {
             <LocationsSection />
 
             {/* Services Section */}
-            <section className="px-10 py-20 bg-white">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            <section className="bg-white px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
+                <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 md:grid-cols-2 lg:gap-12">
                     {/* Left Side - Contact Info */}
                     <div>
                         <h2 className="text-2xl text-gray-800 font-bold mb-6">Contact Us</h2>
@@ -208,7 +208,7 @@ export default function Hero() {
                             </div>
                             <div>
                                 <p className="font-semibold">Hours</p>
-                                <div className="grid grid-cols-2 gap-y-1">
+                                <div className="grid grid-cols-1 gap-y-1 sm:grid-cols-2">
                                     {[
                                         ["Monday", "8:30 am – 7:30 pm"],
                                         ["Tuesday", "8:30 am – 7:30 pm"],
@@ -254,7 +254,7 @@ export default function Hero() {
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="flex gap-4">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <input
                                     type="text"
                                     name="firstName"
@@ -270,7 +270,7 @@ export default function Hero() {
                                     value={formData.lastName}
                                     onChange={handleInputChange}
                                     placeholder="Last Name"
-                                    className="flex-1 border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
+                                    className="border text-gray-700 border-gray-400 rounded-md px-4 py-2 text-sm"
                                     required
                                 />
                             </div>

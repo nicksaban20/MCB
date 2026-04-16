@@ -18,7 +18,7 @@ const OrdersSection = ({ orders }: { orders: any[] }) => {
 
     return (
         <div className="bg-white p-6 rounded-lg border border-[#003262] mb-6 text-[#003262]">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h3 className="text-lg font-semibold">Past Orders</h3>
                 <select
                     className="text-sm border border-[#003262] rounded-md p-1 text-[#003262] bg-white"
@@ -33,7 +33,7 @@ const OrdersSection = ({ orders }: { orders: any[] }) => {
 
             <div className="space-y-4 mt-4">
                 {sortedOrders.map((order, index) => (
-                    <div key={index} className="flex justify-between items-center border-b border-gray-200 py-2">
+                    <div key={index} className="flex flex-col gap-3 border-b border-gray-200 py-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center">
                             <div className="w-10 h-10 bg-[#FDB515] rounded-md mr-4"></div>
                             <div>
@@ -53,8 +53,8 @@ const OrdersSection = ({ orders }: { orders: any[] }) => {
                 ))}
             </div>
 
-            <div className="flex justify-end mt-4">
-                <button className="px-4 py-2 bg-[#FDB515] text-[#003262] rounded-lg flex items-center hover:bg-[#e6a013] transition-colors">
+            <div className="mt-4 flex justify-stretch sm:justify-end">
+                <button className="flex w-full items-center justify-center rounded-lg bg-[#FDB515] px-4 py-2 text-[#003262] transition-colors hover:bg-[#e6a013] sm:w-auto">
                     Download Order History
                 </button>
             </div>

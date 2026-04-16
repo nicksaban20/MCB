@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import Navbar from "../navbar/page";
+import Navbar from "../navbar/Navbar";
 import OrdersSection from "./OrdersSection";
 import ProfileCard from "./ProfileCard";
 
@@ -41,10 +41,10 @@ const Dashboard = async () => {
     return (
         <div className="bg-white text-black">
             <Navbar profilePicUrl={avatarUrl} user={user} />
-            <div className="bg-white min-h-screen mx-8 p-6">
+            <div className="min-h-screen bg-white px-4 py-4 sm:mx-4 sm:px-6 sm:py-6 lg:mx-8">
                 <ProfileCard user={user} orgData={orgData} avatarUrl={avatarUrl} />
 
-                <div className="grid grid-cols-2 gap-6 mt-6">
+                <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
                     <div className="text-black bg-white">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl text-[#003262] font-semibold">

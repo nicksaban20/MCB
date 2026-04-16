@@ -1,11 +1,10 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 import SequencingTxtLink from '@/components/SequencingTxtLink';
+import { createClient } from '@/utils/supabase/server';
 
 export default async function HomePage() {
-  const supabase = createServerComponentClient({ cookies })
-  const { data: { session } } = await supabase.auth.getSession()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -18,9 +17,9 @@ export default async function HomePage() {
       <SequencingTxtLink />
         
         <div className="flex justify-center space-x-4">
-          {session ? (
+          {user ? (
             <>
-              <p className="text-center">Logged in as {session.user.email}</p>
+              <p className="text-center">Logged in as {user.email}</p>
               <Link href="/profile" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                 View Profile
               </Link>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Navbar from "../navbar/page";
+import Navbar from "../navbar/Navbar";
 import { createClient } from '@/utils/supabase/client';
 
 export default function CellLineAuthentication() {

@@ -169,14 +169,23 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex bg-white min-h-screen">
-      <div className="w-1/2 text-black p-8 flex items-center rounded-r-lg">
-        <p className="text-lg font-semibold">
-          TODO: put an image here
-        </p>
+    <div className="flex min-h-screen flex-col bg-white lg:flex-row">
+      <div className="flex items-center justify-center bg-[#0A215C] px-6 py-10 text-white lg:w-1/2 lg:px-10">
+        <div className="max-w-lg space-y-4 text-center lg:text-left">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#FDB515]">
+            Berkeley Sequencing Lab
+          </p>
+          <h1 className="text-3xl font-bold sm:text-4xl">
+            Create a secure account to submit and track sequencing work
+          </h1>
+          <p className="text-sm text-blue-100 sm:text-base">
+            Register once to place orders, review your order history, and receive updates from the lab team.
+          </p>
+        </div>
       </div>
-      <div className="w-1/2 flex flex-col justify-center p-8 max-w-md mx-auto">
-        <h2 className="text-2xl text-black font-bold mb-4">Create an Account</h2>
+      <div className="flex flex-1 flex-col justify-center px-4 py-8 sm:px-6 md:px-10 lg:w-1/2 lg:px-12">
+        <div className="mx-auto w-full max-w-xl">
+        <h2 className="mb-4 text-2xl font-bold text-black">Create an Account</h2>
         
         {/* Success Message */}
         {successMessage && (
@@ -195,8 +204,8 @@ const Auth = () => {
         <form onSubmit={handleSignUp} className="space-y-4">
           <h3 className="text-lg text-gray-900 font-semibold">Basic Information</h3>
           
-          <div className="flex space-x-4">
-            <div className="w-1/2">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
               <input 
                 type="text" 
                 placeholder="First Name" 
@@ -216,7 +225,7 @@ const Auth = () => {
                 <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
               )}
             </div>
-            <div className="w-1/2">
+            <div>
               <input 
                 type="text" 
                 placeholder="Last Name" 
@@ -373,7 +382,7 @@ const Auth = () => {
 
           <button 
             type="submit" 
-            className="w-full p-3 bg-[#003262] text-white rounded text-lg hover:bg-[#00204a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors" 
+            className="w-full rounded bg-[#003262] p-3 text-lg text-white transition-colors hover:bg-[#00204a] disabled:cursor-not-allowed disabled:bg-gray-400" 
             disabled={loading}
           >
             {loading ? 'Creating Account...' : 'SIGN UP'}
@@ -391,7 +400,7 @@ const Auth = () => {
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          className="w-full flex items-center justify-center gap-2 bg-white border border-[#003262] rounded-md py-2 px-4 text-[#003262] hover:bg-[#FDB515] hover:text-[#003262]"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-[#003262] bg-white px-4 py-2 text-[#003262] hover:bg-[#FDB515] hover:text-[#003262]"
         >
           <FcGoogle size={20} />
           Sign up with Google
@@ -400,6 +409,7 @@ const Auth = () => {
         <p className="mt-4 text-gray-300 text-center text-sm">
           Already have an account? <Link href="/login" className="text-sm underline text-[#003262]">Log In</Link>
         </p>
+        </div>
       </div>
     </div>
   );

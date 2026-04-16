@@ -1,18 +1,27 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import type { User } from '@supabase/supabase-js';
+
+type OrganizationData = {
+  phone?: string | null;
+  street_address?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zip_code?: string | null;
+  name?: string | null;
+  department?: string | null;
+};
 
 interface ProfileCardProps {
-  user: any;
-  orgData: any;
+  user: User;
+  orgData: OrganizationData | null;
   avatarUrl: string;
 }
 
 export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardProps) {
   const router = useRouter();
-  const supabase = createClient();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   
@@ -65,57 +74,34 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
   const handleSave = async () => {
     setLoading(true);
     try {
-      // First, check if organization exists
-      const { data: existingOrg, error: checkError } = await supabase
-        .from('organizations')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      const response = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phone: formData.phone,
+          streetAddress: formData.streetAddress,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode,
+          organization: formData.organization,
+          department: formData.department,
+        }),
+      });
 
-      // Check error only if it's not a "not found" error
-      if (checkError && checkError.code !== 'PGRST116') {
-        throw checkError;
+      const responseBody = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseBody?.details || responseBody?.error || 'Failed to save profile');
       }
 
-      const orgDataToSave = {
-        user_id: user.id,
-        name: formData.organization || null,
-        phone: formData.phone || null,
-        street_address: formData.streetAddress || null,
-        city: formData.city || null,
-        state: formData.state || null,
-        zip_code: formData.zipCode || null,
-        department: formData.department || null,
-      };
-
-      let result;
-      if (existingOrg) {
-        // Update existing record
-        result = await supabase
-          .from('organizations')
-          .update(orgDataToSave)
-          .eq('user_id', user.id);
-      } else {
-        // Insert new record
-        result = await supabase
-          .from('organizations')
-          .insert([orgDataToSave]);
-      }
-
-      if (result.error) {
-        console.error('Supabase error:', result.error);
-        throw new Error(result.error.message || 'Failed to save profile');
-      }
-
-      // Show success message
       alert('Profile saved successfully!');
-      
-      // Refresh the page to show updated data
       router.refresh();
       setIsEditing(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error saving profile:', error);
-      const errorMessage = error?.message || error?.toString() || 'Failed to save profile. Please try again.';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save profile. Please try again.';
       alert(`Error: ${errorMessage}`);
     } finally {
       setLoading(false);
@@ -143,12 +129,12 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
 
   return (
     <>
-      <div className="mb-6 flex justify-between items-start">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <h1 className="text-3xl text-[#003262] font-bold">Welcome Back!</h1>
         {!isEditing && (
           <button
             onClick={handleEdit}
-            className="flex items-center gap-2 px-4 py-2 border border-[#003262] rounded-lg text-[#003262] hover:bg-[#003262] hover:text-white transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#003262] px-4 py-2 text-[#003262] transition-colors hover:bg-[#003262] hover:text-white sm:w-auto"
           >
             <span>Edit</span>
             <svg
@@ -169,7 +155,7 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
       </div>
 
       <div className="bg-white p-6 rounded-lg border border-[#003262]">
-        <div className="flex items-start gap-6">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
           {/* Left Column: Profile Picture, Name, Email, Phone */}
           <div className="flex items-start gap-4 flex-1">
             {avatarUrl ? (
@@ -189,7 +175,7 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
               <h2 className="text-xl font-bold text-[#003262] mb-1">
                 {firstName} {lastName}
               </h2>
-              <div className="flex items-center gap-2 text-gray-600 text-sm">
+              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
                 <span>{email}</span>
                 {!isEditing && formData.phone && (
                   <>
@@ -216,7 +202,7 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
                   onChange={(e) => setFormData({ ...formData, streetAddress: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded text-sm"
                 />
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <input
                     type="text"
                     placeholder="City"
@@ -236,7 +222,7 @@ export default function ProfileCard({ user, orgData, avatarUrl }: ProfileCardPro
                     placeholder="Zip"
                     value={formData.zipCode}
                     onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
-                    className="w-20 p-2 border border-gray-300 rounded text-sm"
+                    className="w-full rounded border border-gray-300 p-2 text-sm sm:w-20"
                   />
                 </div>
               </div>

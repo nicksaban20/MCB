@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isStaffRole, requireAuthenticatedUser } from '@/app/api/_lib/auth';
+import { logAdminAction } from '@/app/api/_lib/audit';
 
 type PlateWellInput = {
   well: string;
@@ -161,6 +162,20 @@ export async function POST(request: Request) {
         }
       }
     }
+
+    await logAdminAction(
+      { supabase, user, role },
+      {
+        action: plateId ? 'plate_updated' : 'plate_created',
+        targetTable: 'plates',
+        targetId: activePlateId,
+        metadata: {
+          name: name ?? null,
+          status,
+          wellCount: wells.length,
+        },
+      }
+    );
 
     return NextResponse.json({ plateId: activePlateId }, { status: 201 });
   } catch (err) {

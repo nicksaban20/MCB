@@ -9,7 +9,7 @@ import {
   FaDownload,
 } from "react-icons/fa"
 import type { User } from '@supabase/supabase-js'
-import Navbar from "../navbar/page"
+import Navbar from "../navbar/Navbar"
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -364,19 +364,19 @@ export default function Dashboard() {
   return (
     <>
       <Navbar profilePicUrl={user?.user_metadata?.avatar_url || user?.user_metadata?.picture || ""} user={user} />
-      <div className="flex h-screen bg-gray-100">
-        <aside className="w-1/4 bg-gray-50 border-r p-4 space-y-6 text-gray-800">
-          <div className="flex justify-between items-center">
+      <div className="flex min-h-screen flex-col bg-gray-100 lg:flex-row">
+        <aside className="w-full border-b bg-gray-50 p-4 text-gray-800 lg:w-80 lg:shrink-0 lg:border-r lg:border-b-0">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="text-lg font-semibold">Plate Selection</h3>
             <button
               onClick={handleAddPlate}
-              className="flex items-center text-sm px-2 py-1 border rounded hover:bg-gray-200"
+              className="flex items-center justify-center rounded border px-3 py-2 text-sm hover:bg-gray-200"
             >
               <FaPlus className="mr-1" /> Add new plate
             </button>
           </div>
 
-          <div>
+          <div className="mt-6">
             <button
               className="w-full flex justify-between items-center py-2 hover:bg-gray-200 rounded"
               onClick={() => setOpenCurrent(!openCurrent)}
@@ -406,7 +406,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          <div>
+          <div className="mt-6">
             <button
               className="w-full flex justify-between items-center py-2 hover:bg-gray-200 rounded"
               onClick={() => setOpenPast(!openPast)}
@@ -437,7 +437,7 @@ export default function Dashboard() {
           </div>
         </aside>
 
-        <div className="flex-1 p-6 space-y-8">
+        <div className="flex-1 space-y-6 p-4 sm:p-6">
           {message && (
             <div className="rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
               {message}
@@ -467,13 +467,13 @@ export default function Dashboard() {
                 </select>
               </div>
             </div>
-            <div className="bg-gray-100 p-4 rounded">
-              <div className="bg-gray-200 p-2 rounded">
-                <div className="grid grid-cols-12 gap-1">
+            <div className="overflow-x-auto rounded bg-gray-100 p-3 sm:p-4">
+              <div className="min-w-[18rem] rounded bg-gray-200 p-2 sm:min-w-[28rem]">
+                <div className="grid grid-cols-12 gap-1 sm:gap-2">
                   {wellColors.map((colorClass, idx) => (
                     <div
                       key={getWellName(idx)}
-                      className={`w-6 h-6 rounded-full ${colorClass} cursor-pointer`}
+                      className={`h-5 w-5 cursor-pointer rounded-full sm:h-6 sm:w-6 md:h-7 md:w-7 ${colorClass}`}
                       onClick={() => paintWell(idx)}
                       title={getWellName(idx)}
                     />
@@ -484,7 +484,7 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-white p-4 rounded shadow flex flex-col">
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <h4 className="text-lg font-semibold">Customer / Samples</h4>
               <span className="text-sm text-gray-500">Select an order, then click wells to assign it.</span>
             </div>
@@ -516,11 +516,11 @@ export default function Dashboard() {
             </ul>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-stretch sm:justify-end">
             <button
               onClick={handleSavePlate}
               disabled={!activePlate || saving}
-              className="flex items-center text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+              className="flex w-full items-center justify-center rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300 sm:w-auto"
             >
               <FaDownload className="mr-2" /> {saving ? 'Saving...' : 'Save Plate Layout'}
             </button>

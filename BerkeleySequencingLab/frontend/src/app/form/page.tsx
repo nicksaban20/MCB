@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Navbar from "../navbar/page";
-import SpecifyOrder from '../form-specify-order/page'
-import ContactPage from "../contact-page/page";
-import SampleDetails from "../form-sample-details/page";
-import ReviewOrder     from '../form-review-order/page'
+import Navbar from "../navbar/Navbar";
+import SpecifyOrderStep from '../form-specify-order/SpecifyOrderStep'
+import ContactPageForm from "../contact-page/ContactPageForm";
+import SampleDetailsStep from "../form-sample-details/SampleDetailsStep";
+import ReviewOrderStep from '../form-review-order/ReviewOrderStep'
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
 
@@ -98,9 +98,9 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
     <>
     
       <Navbar profilePicUrl={""} user={user} />
-      <div className="flex min-h-screen bg-[#F1F1F1] p-6 text-gray-600 gap-15">
+      <div className="flex min-h-screen flex-col gap-6 bg-[#F1F1F1] p-4 text-gray-600 sm:p-6 xl:flex-row xl:gap-10">
         {/* LEFT NAV CONTAINER - Updated to match Figma design */}
-        <div className="w-[300px] mt-10 bg-white  rounded-xl shadow-lg px-8 py-8 ml-10 flex flex-col h-full">
+        <div className="mt-4 flex h-full w-full flex-col rounded-xl bg-white px-5 py-6 shadow-lg sm:px-8 sm:py-8 xl:mt-10 xl:w-[300px] xl:shrink-0">
           {/* Title & Subtitle */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-[#003262]">
@@ -133,7 +133,7 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
               const isCompleted = currentStep > stepNumber;
 
               return (
-                <div key={index} className="relative flex items-center">
+                <div key={index} className="relative flex items-center justify-between gap-4">
                   {/* Step Label */}
                   <div className="flex flex-col w-full">
                     <p className="text-xs text-gray-400">{`Step ${stepNumber}`}</p>
@@ -150,7 +150,7 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
                   </div>
 
                   {/* Circle (Bubble) + Vertical Lines */}
-                  <div className="relative flex items-center ml-4">
+                  <div className="relative ml-2 flex shrink-0 items-center sm:ml-4">
                     {/* Circle */}
                     <div
                       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center
@@ -202,44 +202,44 @@ const steps = ["Specify Order", "Sample Details", "Contact", "Confirm & Submit"]
         </div>
 
         {/* Right form content */}
-        <div className="w-3/4 mt-10 bg-white rounded-2xl border border-gray-300 shadow-lg px-6 py-6 ml-10 mr-15">
-          <form className="space-y-4 p-10">
+        <div className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-4 shadow-lg sm:px-6 sm:py-6 xl:mt-10 xl:flex-1">
+          <form className="space-y-4 p-0 sm:p-2 lg:p-6">
 
             {currentStep === 1 && (
-              <SpecifyOrder formData={formData} setFormData={setFormData} />
+              <SpecifyOrderStep formData={formData} setFormData={setFormData} />
             )}
 
             {currentStep === 2 && (
-              <SampleDetails formData={formData} setFormData={setFormData} />
+              <SampleDetailsStep formData={formData} setFormData={setFormData} />
             )}
 
             {currentStep === 3 && (
-              <ContactPage
+              <ContactPageForm
                 formData={formData}
                 setFormData={setFormData}
               />
             )}
 
             {currentStep === 4 && (
-              <ReviewOrder 
-                formData={formData} 
-                goBack={() => setCurrentStep(3)} 
+              <ReviewOrderStep
+                formData={formData}
+                goBack={() => setCurrentStep(3)}
                 user={user}
               />
             )}
 
             {currentStep < 4 && (
-              <div className="flex justify-end mt-8 space-x-3">
+              <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
-                  className="px-6 py-2 text-[#003262] border border-[#003262] rounded-lg hover:bg-[#FDB515] hover:text-[#003262] text-sm font-medium"
+                  className="rounded-lg border border-[#003262] px-6 py-2 text-sm font-medium text-[#003262] hover:bg-[#FDB515] hover:text-[#003262] sm:min-w-[120px]"
                   onClick={handleBack}
                 >
                   {currentStep === 1 ? "Cancel" : "Back"}
                 </button>
                 <button
                   type="button"
-                  className="px-6 py-2 text-white rounded-lg text-sm font-medium bg-[#002676] hover:bg-[#001a5c]"
+                  className="rounded-lg bg-[#002676] px-6 py-2 text-sm font-medium text-white hover:bg-[#001a5c] sm:min-w-[120px]"
                   onClick={handleNext}
                 >
                   Next

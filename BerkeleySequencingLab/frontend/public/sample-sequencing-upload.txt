@@ -1,0 +1,9 @@
+Container Name	Plate ID	Description	Container Type	App Type	Owner	Operator	Plate Sealing	Scheduling Pref
+TestContainer1	Plate-001	Example sequencing run	96-well	Sanger	Yirina	Lab Tech	Adhesive	ASAP
+AppServer	AppInstance
+seq-server-01	instance-a
+SequencingAnalysis
+Well	Sample Name	Comment	Results Group	Instrument Protocol	Analysis Protocol
+A1	Sample_A1	First test sample	Group1	StdSeq	BaseCallingV1
+A2	Sample_A2	Second test sample	Group1	StdSeq	BaseCallingV1
+B1	Sample_B1	Third test sample	Group2	LongRead	BaseCallingV2

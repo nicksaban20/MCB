@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 // Using specific icons for clarity and potential bundle size reduction
 import { FiClock, FiCheckCircle, FiActivity, FiEdit2 } from 'react-icons/fi';
-import Navbar from '../navbar/page'; // Assuming Navbar component exists and works as expected
+import Navbar from '../navbar/Navbar'; // Assuming Navbar component exists and works as expected
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    const options = { 
+    const options: Intl.DateTimeFormatOptions = {
       month: 'short', 
       day: 'numeric',
       hour: 'numeric', 
@@ -285,16 +285,16 @@ export default function AdminDashboard() {
         user={user}
       />
 
-      <div className="flex flex-row"> {/* Main content and sidebar layout */}
+      <div className="flex flex-col xl:flex-row"> {/* Main content and sidebar layout */}
 
         {/* Main Content Area */}
-        <div className="flex-1 p-8 pr-4"> {/* Reduced right padding */}
-          <div className="flex justify-between items-start mb-8"> {/* Align items start */}
+        <div className="flex-1 p-4 sm:p-6 xl:p-8 xl:pr-4"> {/* Reduced right padding */}
+          <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"> {/* Align items start */}
             <div>
               <h1 className="text-3xl font-bold text-gray-900">DNA Sequencing Dashboard</h1>
               <p className="text-gray-600 mt-1">Welcome back, {displayName}</p>
             </div>
-            <div className="text-right">
+            <div className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm lg:text-right">
               <p className="text-sm text-gray-500">Total DNA Samples</p>
               <p className="text-4xl font-bold text-gray-900">{totalSamples}</p>
             </div>
@@ -362,7 +362,7 @@ export default function AdminDashboard() {
             <div className="divide-y divide-gray-100">
               {incomingRequests.length > 0 ? (
                 incomingRequests.map((request) => (
-                  <div key={request.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition duration-150 ease-in-out">
+                  <div key={request.id} className="px-6 py-4 flex flex-col gap-4 hover:bg-gray-50 transition duration-150 ease-in-out md:flex-row md:items-center md:justify-between">
                     {/* Left side content */}
                     <div className="flex flex-col">
                       <h3 className="text-sm font-semibold text-blue-600">{request.title}</h3>
@@ -370,7 +370,7 @@ export default function AdminDashboard() {
                       <p className="text-xs text-gray-400 mt-1">{request.date}</p>
                     </div>
                     {/* Right side content */}
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                       <label className="flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-700 bg-white focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                         <span className="mr-2">Status</span>
                         <FiEdit2 className="w-4 h-4 ml-2 text-gray-400" />
@@ -387,7 +387,7 @@ export default function AdminDashboard() {
                           ))}
                         </select>
                       </label>
-                      <span className={`px-3 py-1 rounded-md text-xs font-medium ${getStatusStyle(request.status)}`}>
+                      <span className={`inline-flex w-fit rounded-md px-3 py-1 text-xs font-medium ${getStatusStyle(request.status)}`}>
                         {savingOrderId === request.id ? 'saving...' : request.status}
                       </span>
                     </div>
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
         </div> {/* End Main Content Area */}
 
         {/* Past Actions Sidebar */}
-        <aside className="w-80 bg-gray-100 p-6 border-l border-gray-200 min-h-screen">
+        <aside className="min-h-0 border-t border-gray-200 bg-gray-100 p-4 sm:p-6 xl:min-h-screen xl:w-80 xl:border-l xl:border-t-0">
           <h2 className="text-xl font-semibold text-gray-900 mb-5">Past Actions</h2>
           <div className="space-y-6">
             {pastActions.length > 0 ? (

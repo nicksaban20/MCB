@@ -35,7 +35,7 @@ export default function ProfilePage() {
     }
   
     getProfile();
-  }, [router]);
+  }, [router, supabase]);
 
 
   const handleSignOut = async () => {
@@ -47,15 +47,28 @@ export default function ProfilePage() {
     e.preventDefault();
     const form = e.currentTarget;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
+    const response = await fetch('/api/profile/password', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password }),
+    });
 
-    const { error } = await supabase.auth.updateUser({ password });
+    const responseBody = await response.json();
 
-    if (error) {
-      alert('Error updating password: ' + error.message);
-    } else {
-      alert('Password updated successfully!');
-      (form.elements.namedItem('password') as HTMLInputElement).value = '';
+    if (!response.ok) {
+      const details = Array.isArray(responseBody?.details)
+        ? responseBody.details.join(', ')
+        : responseBody?.details || responseBody?.error || 'Unknown error';
+      alert('Error updating password: ' + details);
+      return;
     }
+
+    await supabase.auth.signOut();
+    alert('Password updated successfully. Please sign in again.');
+    (form.elements.namedItem('password') as HTMLInputElement).value = '';
+    router.push('/login');
   };
 
   const handleDeleteAccount = async () => {
@@ -69,13 +82,13 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex justify-center items-start py-20 px-4 bg-white min-h-screen text-black">
-      <div className="max-w-2xl w-full border border-gray-300 rounded-2xl p-10 shadow-md">
+    <div className="flex min-h-screen items-start justify-center bg-white px-4 py-10 text-black sm:py-20">
+      <div className="w-full max-w-2xl rounded-2xl border border-gray-300 p-6 shadow-md sm:p-10">
         <div className="flex flex-col items-center mb-8">
           <div className="w-24 h-24 rounded-full bg-black text-white flex items-center justify-center text-3xl font-bold mb-4">
             {user?.email?.[0].toUpperCase()}
           </div>
-          <h1 className="text-3xl font-semibold">Your Profile</h1>
+          <h1 className="text-center text-3xl font-semibold">Your Profile</h1>
           <p className="text-gray-500 mt-1">{user?.email}</p>
         </div>
 

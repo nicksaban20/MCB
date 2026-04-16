@@ -1,10 +1,18 @@
 "use client"
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { login, resetPassword } from "./actions";
 import { createClient } from "@/utils/supabase/client";
+
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return fallback;
+}
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -14,8 +22,56 @@ const Login = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
   const [showResendVerification, setShowResendVerification] = useState(false);
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaPrompt, setCaptchaPrompt] = useState("");
+  const [captchaId, setCaptchaId] = useState("");
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaLoading, setCaptchaLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  useEffect(() => {
+    if (searchParams.get('reason') === 'timeout') {
+      setError('Your session expired due to inactivity. Please sign in again.');
+    }
+    if (searchParams.get('reset') === 'success') {
+      setSuccessMessage('Password updated successfully. Please sign in with your new password.');
+    }
+  }, [searchParams]);
+
+  const loadCaptchaChallenge = async (email: string) => {
+    if (!email.trim()) {
+      setError("Please enter your email address first.");
+      return;
+    }
+
+    setCaptchaLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/captcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const responseBody = await response.json();
+      if (!response.ok) {
+        throw new Error(responseBody?.details || responseBody?.error || 'Failed to load verification challenge.');
+      }
+
+      setCaptchaId(responseBody.captchaId);
+      setCaptchaPrompt(responseBody.prompt);
+      setCaptchaAnswer("");
+      setShowCaptcha(true);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to load verification challenge.'));
+    } finally {
+      setCaptchaLoading(false);
+    }
+  };
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,20 +79,34 @@ const Login = () => {
     setError("");
     setSuccessMessage("");
     setShowResendVerification(false);
+    const formData = new FormData(e.currentTarget);
+    const submittedEmail = ((formData.get('email') as string) || '').trim().toLowerCase();
     
     try {
-      const formData = new FormData(e.currentTarget);
+      if (captchaId) {
+        formData.set('captchaId', captchaId);
+      }
+      if (captchaAnswer) {
+        formData.set('captchaAnswer', captchaAnswer);
+      }
+
       await login(formData);
       // If we get here, redirect happened on server side
       // But just in case, redirect client-side too
       router.push('/dashboard');
-    } catch (err: any) {
-      const errorMessage = err?.message || "An unexpected error occurred. Please try again.";
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err, "An unexpected error occurred. Please try again.");
       setError(errorMessage);
       
       if (errorMessage === 'EMAIL_NOT_VERIFIED') {
         setShowResendVerification(true);
         setError('Please verify your email address before signing in. Check your inbox for the verification link.');
+      } else if (errorMessage === 'CAPTCHA_REQUIRED') {
+        setError('Please complete the verification challenge before trying again.');
+        await loadCaptchaChallenge(submittedEmail);
+      } else if (errorMessage === 'CAPTCHA_INVALID') {
+        setError('That verification answer was incorrect. Please try a new challenge.');
+        await loadCaptchaChallenge(submittedEmail);
       }
     } finally {
       setLoading(false);
@@ -134,7 +204,7 @@ const Login = () => {
     setSuccessMessage("");
     
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
@@ -151,21 +221,30 @@ const Login = () => {
       }
       // If successful, the user will be redirected to Google's OAuth page
       // No need to handle success here as redirect happens automatically
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Exception during Google sign-in:", err);
       setError("An unexpected error occurred during Google sign-in. Please try again.");
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
-      <div className="w-1/2 bg-white text-black p-8 flex items-center justify-center rounded-r-lg">
-        <p className="text-xl font-semibold max-w-md">
-          TODO: put an image here
-        </p>
+    <div className="flex min-h-screen flex-col bg-white lg:flex-row">
+      <div className="flex items-center justify-center bg-[#0A215C] px-6 py-10 text-white lg:w-1/2 lg:px-10">
+        <div className="max-w-lg space-y-4 text-center lg:text-left">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#FDB515]">
+            Berkeley Sequencing Lab
+          </p>
+          <h1 className="text-3xl font-bold sm:text-4xl">
+            Secure access for clients, staff, and superadmins
+          </h1>
+          <p className="text-sm text-blue-100 sm:text-base">
+            Sign in to manage orders, review sequencing data, and access lab operations tools from any device.
+          </p>
+        </div>
       </div>
-      <div className="w-1/2 flex flex-col justify-center px-16 py-12">
-        <h2 className="text-3xl text-black font-bold mb-6 text-center">Sign In</h2>
+      <div className="flex flex-1 flex-col justify-center px-4 py-8 sm:px-6 md:px-10 lg:w-1/2 lg:px-16 lg:py-12">
+        <div className="mx-auto w-full max-w-xl">
+        <h2 className="mb-6 text-center text-3xl font-bold text-black">Sign In</h2>
         
         {/* Error Message */}
         {error && (
@@ -203,7 +282,7 @@ const Login = () => {
                 name="email"
                 type="email" 
                 placeholder="Email" 
-                className="p-3 placeholder-gray-300 text-gray-300 border rounded w-full" 
+                className="w-full rounded border p-3 text-gray-700 placeholder-gray-400" 
                 required 
               />
             </div>
@@ -212,11 +291,38 @@ const Login = () => {
                 name="password"
                 type="password" 
                 placeholder="Password" 
-                className="p-3 placeholder-gray-300 text-gray-300 border rounded w-full" 
+                className="w-full rounded border p-3 text-gray-700 placeholder-gray-400" 
                 required 
               />
             </div>
-            <button 
+            {showCaptcha && (
+              <div className="space-y-2 rounded-md border border-yellow-200 bg-yellow-50 p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-sm font-medium text-yellow-900">
+                    Verification challenge: {captchaPrompt || 'Loading...'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => loadCaptchaChallenge(((document.querySelector('input[name=\"email\"]') as HTMLInputElement | null)?.value || '').trim().toLowerCase())}
+                    className="text-sm text-yellow-900 underline hover:no-underline"
+                    disabled={captchaLoading}
+                  >
+                    {captchaLoading ? 'Refreshing...' : 'Refresh challenge'}
+                  </button>
+                </div>
+                <input type="hidden" name="captchaId" value={captchaId} />
+                <input
+                  name="captchaAnswer"
+                  type="text"
+                  placeholder="Enter the answer"
+                  className="p-3 placeholder-gray-400 text-gray-700 border rounded w-full"
+                  value={captchaAnswer}
+                  onChange={(e) => setCaptchaAnswer(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+            <button
               type="button"
               onClick={() => setShowForgotPassword(true)}
               className="text-sm text-gray-600 hover:text-gray-900 underline"
@@ -225,7 +331,7 @@ const Login = () => {
             </button>
             <button 
               type="submit" 
-              className="w-full p-3 bg-[#003262] text-white rounded text-lg hover:bg-[#00204a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors" 
+              className="w-full rounded bg-[#003262] p-3 text-lg text-white transition-colors hover:bg-[#00204a] disabled:cursor-not-allowed disabled:bg-gray-400" 
               disabled={loading}
             >
               {loading ? 'Signing in...' : 'SIGN IN'}
@@ -234,17 +340,17 @@ const Login = () => {
         ) : (
           <form onSubmit={handleForgotPassword} className="space-y-4">
             <p className="text-gray-600 mb-4">
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we&apos;ll send you a link to reset your password.
             </p>
             <input 
               type="email" 
               placeholder="Email" 
-              className="p-3 placeholder-gray-300 text-gray-300 border rounded w-full"
+              className="w-full rounded border p-3 text-gray-700 placeholder-gray-400"
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
               required 
             />
-            <div className="flex space-x-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <button 
                 type="button"
                 onClick={() => {
@@ -252,13 +358,13 @@ const Login = () => {
                   setResetEmail("");
                   setError("");
                 }}
-                className="flex-1 p-3 bg-white border border-[#003262] text-[#003262] rounded text-lg hover:bg-[#FDB515] hover:text-[#003262] transition-colors"
+                className="flex-1 rounded border border-[#003262] bg-white p-3 text-lg text-[#003262] transition-colors hover:bg-[#FDB515] hover:text-[#003262]"
               >
                 Cancel
               </button>
               <button 
                 type="submit" 
-                className="flex-1 p-3 bg-[#003262] text-white rounded text-lg hover:bg-[#00204a] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors" 
+                className="flex-1 rounded bg-[#003262] p-3 text-lg text-white transition-colors hover:bg-[#00204a] disabled:cursor-not-allowed disabled:bg-gray-400" 
                 disabled={resetLoading}
               >
                 {resetLoading ? 'Sending...' : 'Send Reset Link'}
@@ -279,15 +385,16 @@ const Login = () => {
         <button
           type="button"
           onClick={handleGoogleSignIn}
-          className="w-full flex items-center justify-center gap-2 bg-white border border-[#003262] rounded-md py-3 px-4 text-[#003262] hover:bg-[#FDB515] hover:text-[#003262] text-lg font-medium"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-[#003262] bg-white px-4 py-3 text-lg font-medium text-[#003262] hover:bg-[#FDB515] hover:text-[#003262]"
         >
           <FcGoogle size={24} />
           Sign in with Google
         </button>
         
         <p className="mt-6 text-center text-gray-600">
-          Don't have an account? <Link href="/signin" className="text-[#003262] underline not-last:font-semibold">Sign Up</Link>
+          Don&apos;t have an account? <Link href="/signin" className="text-[#003262] underline not-last:font-semibold">Sign Up</Link>
         </p>
+        </div>
       </div>
     </div>
   );

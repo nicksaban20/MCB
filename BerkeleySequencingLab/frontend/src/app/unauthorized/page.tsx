@@ -16,6 +16,8 @@ export default async function Unauthorized({ searchParams }: UnauthorizedPagePro
       ? 'You must have a staff or superadmin role to view this page.'
       : reason === 'superadmin'
         ? 'You must have a superadmin role to view this page.'
+        : reason === 'deactivated'
+          ? 'This account has been deactivated. Please contact a superadmin for access.'
         : 'You must be logged in to view this page.';
 
   return (

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isStaffRole, requireAuthenticatedUser } from '@/app/api/_lib/auth';
+import { logAdminAction } from '@/app/api/_lib/audit';
 
 const VALID_STATUSES = ['pending', 'in_progress', 'completed'] as const;
 
@@ -14,7 +15,7 @@ export async function PATCH(
       return authResult.errorResponse;
     }
 
-    const { supabase, role } = authResult.context;
+    const { supabase, user, role } = authResult.context;
 
     if (!isStaffRole(role)) {
       return NextResponse.json(
@@ -47,6 +48,18 @@ export async function PATCH(
         { status: 500 }
       );
     }
+
+    await logAdminAction(
+      { supabase, user, role },
+      {
+        action: 'order_status_updated',
+        targetTable: 'dna_orders',
+        targetId: id,
+        metadata: {
+          nextStatus,
+        },
+      }
+    );
 
     return NextResponse.json({ order: data });
   } catch (err) {

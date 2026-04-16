@@ -2,6 +2,8 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { formatRetryDelay, loginServerRateLimiter } from '@/utils/server-rate-limit'
+import { clearCaptchaChallengesForEmail, validateCaptchaChallenge } from '@/utils/server-captcha'
 
 export interface LoginResult {
   success: boolean;
@@ -13,6 +15,8 @@ export async function login(formData: FormData) {
   const supabase = await createClient()
   const email = (formData.get('email') as string)?.trim().toLowerCase()
   const password = formData.get('password') as string
+  const captchaId = (formData.get('captchaId') as string | null)?.trim() ?? ''
+  const captchaAnswer = (formData.get('captchaAnswer') as string | null)?.trim() ?? ''
 
   // Basic validation - throw error that client can catch
   if (!email || !password) {
@@ -25,12 +29,36 @@ export async function login(formData: FormData) {
     throw new Error('Please enter a valid email address')
   }
 
+  const rateLimitStatus = await loginServerRateLimiter.getStatus(email)
+  if (!rateLimitStatus.allowed) {
+    throw new Error(
+      `Too many login attempts. Please try again in ${formatRetryDelay(rateLimitStatus.retryAfterMs)}.`
+    )
+  }
+
+  if (await loginServerRateLimiter.getAttemptCount(email) >= 3) {
+    if (!captchaId || !captchaAnswer) {
+      throw new Error('CAPTCHA_REQUIRED')
+    }
+
+    const isCaptchaValid = validateCaptchaChallenge({
+      email,
+      captchaId,
+      captchaAnswer,
+    })
+
+    if (!isCaptchaValid) {
+      throw new Error('CAPTCHA_INVALID')
+    }
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
 
   if (error) {
+    await loginServerRateLimiter.recordFailure(email)
     // Handle specific error types
     if (error.message.includes('Invalid login credentials')) {
       throw new Error('Invalid email or password. Please try again.')
@@ -45,8 +73,12 @@ export async function login(formData: FormData) {
 
   // Check if email is verified
   if (data.user && !data.user.email_confirmed_at) {
+    await loginServerRateLimiter.recordFailure(email)
     throw new Error('EMAIL_NOT_VERIFIED')
   }
+
+  await loginServerRateLimiter.reset(email)
+  clearCaptchaChallengesForEmail(email)
 
   // Successful login - redirect
   revalidatePath('/', 'layout')

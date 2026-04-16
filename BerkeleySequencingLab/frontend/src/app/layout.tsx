@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { UserContext, UserProvider } from '@/context/UserContext'
+import { UserProvider } from '@/context/UserContext'
+import { createClient } from '@/utils/supabase/server'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +25,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createServerComponentClient({ cookies })
-  
+  const supabase = await createClient()
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
   return (
     <html lang="en">
       <body>
-        <UserProvider initialSession={session}>
+        <UserProvider initialSession={user ? { user } : null}>
         {children}
         </UserProvider>
       </body>

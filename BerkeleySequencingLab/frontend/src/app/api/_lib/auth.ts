@@ -28,7 +28,7 @@ export async function requireAuthenticatedUser() {
 
   const { data: profile, error: profileError } = await supabase
     .from('user_profiles')
-    .select('role')
+    .select('role, is_active')
     .eq('id', user.id)
     .maybeSingle();
 
@@ -37,6 +37,15 @@ export async function requireAuthenticatedUser() {
       errorResponse: NextResponse.json(
         { error: 'Failed to load user role', details: profileError.message },
         { status: 500 }
+      ),
+    };
+  }
+
+  if (profile && profile.is_active === false) {
+    return {
+      errorResponse: NextResponse.json(
+        { error: 'Account deactivated. Please contact a superadmin.' },
+        { status: 403 }
       ),
     };
   }
