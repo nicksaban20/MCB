@@ -36,6 +36,7 @@ AS $$
     SELECT 1
     FROM public.user_profiles
     WHERE id = auth.uid()
+      AND COALESCE(is_active, TRUE)
       AND role IN ('staff', 'superadmin')
   );
 $$;
@@ -51,6 +52,7 @@ AS $$
     SELECT 1
     FROM public.user_profiles
     WHERE id = auth.uid()
+      AND COALESCE(is_active, TRUE)
       AND role = 'superadmin'
   );
 $$;

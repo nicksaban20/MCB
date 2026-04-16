@@ -74,6 +74,8 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
   id         UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   role       TEXT NOT NULL DEFAULT 'customer'
                CHECK (role IN ('customer', 'staff', 'superadmin')),
+  is_active  BOOLEAN NOT NULL DEFAULT TRUE,
+  deactivated_at TIMESTAMPTZ,
   first_name TEXT,
   last_name  TEXT,
   phone      TEXT,

@@ -112,3 +112,14 @@ Make sure you have a `.env` file in the `backend` directory with any required en
 
 ### Backend
 - `node server.js` - Start the Express server
+
+## GCP Deployment
+
+The production deployment target is **Google Cloud Run** for the Next.js app in `frontend/`.
+
+Deployment assets added in this repo:
+- [frontend/Dockerfile](/Users/yirinaw/Documents/berkeley/spring26/genai_mcb/mcb2/BerkeleySequencingLab/frontend/Dockerfile)
+- [deploy-cloud-run.yml](/Users/yirinaw/Documents/berkeley/spring26/genai_mcb/mcb2/.github/workflows/deploy-cloud-run.yml)
+- [gcp-deployment.md](/Users/yirinaw/Documents/berkeley/spring26/genai_mcb/mcb2/BerkeleySequencingLab/docs/gcp-deployment.md)
+
+See the deployment guide for the exact GCP and GitHub secrets you need before running the workflow.
